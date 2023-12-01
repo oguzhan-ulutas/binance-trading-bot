@@ -2,10 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
-const binanceController = require('../controllers/binanceController');
+const marginController = require('../controllers/marginController');
 
-// Balance Routes
-// Get balance
-router.get('/balance', binanceController.getBalance);
+// Margin Routes
+// Get margin user data
+router.get('/margin/userData', marginController.getUserData);
 
 module.exports = router;
