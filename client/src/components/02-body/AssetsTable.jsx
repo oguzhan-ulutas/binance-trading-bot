@@ -223,14 +223,7 @@ export default function AssetsTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const { userMarginData } = React.useContext(BotContext);
-
-  // Set non-zero value assets as an array
-  const userAssets = userMarginData.userAssets
-    ? userMarginData.userAssets.filter((asset) => {
-        return asset.netAsset !== "0";
-      })
-    : [];
+  const { userAssets } = React.useContext(BotContext);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";

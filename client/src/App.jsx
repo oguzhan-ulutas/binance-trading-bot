@@ -8,9 +8,16 @@ function App() {
   const serverUrl = import.meta.env.VITE_serverUrl;
   const [userMarginData, setMarginUserData] = useState({});
 
+  // Set non-zero value assets as an array
+  const userAssets = userMarginData.userAssets
+    ? userMarginData.userAssets.filter((asset) => {
+        return asset.netAsset !== "0";
+      })
+    : [];
+
   return (
     <BotContext.Provider
-      value={{ serverUrl, userMarginData, setMarginUserData }}
+      value={{ serverUrl, userMarginData, setMarginUserData, userAssets }}
     >
       <Router />
     </BotContext.Provider>
