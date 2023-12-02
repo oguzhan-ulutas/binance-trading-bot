@@ -21,6 +21,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import TimesTwoMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
 
 import Balance from "./Balance";
+import AssetsTable from "./AssetsTable";
 
 const drawerWidth = 240;
 
@@ -209,6 +210,7 @@ export default function MiniDrawer() {
         <DrawerHeader />
         <Balance />
         <Divider />
+        <AssetsTable />
       </Box>
     </Box>
   );
