@@ -5,9 +5,13 @@ import "./App.css";
 import { useState } from "react";
 
 function App() {
+  const serverUrl = import.meta.env.VITE_serverUrl;
   const [userMarginData, setMarginUserData] = useState({});
+
   return (
-    <BotContext.Provider value={{ userMarginData, setMarginUserData }}>
+    <BotContext.Provider
+      value={{ serverUrl, userMarginData, setMarginUserData }}
+    >
       <Router />
     </BotContext.Provider>
   );

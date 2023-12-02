@@ -1,14 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 
-import Header from "./Header";
 import Footer from "./Footer";
 import { BotContext } from "../BotContext";
-
-const serverUrl = import.meta.env.VITE_serverUrl;
-console.log(serverUrl);
+import Body from "../02-body/Body";
 
 const Home = () => {
-  const { userMarginData, setMarginUserData } = useContext(BotContext);
+  const { serverUrl, userMarginData, setMarginUserData } =
+    useContext(BotContext);
 
   useEffect(() => {
     const url = `${serverUrl}/margin/userData`;
@@ -29,7 +27,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <Header />
+      <Body />
       <Footer />
     </div>
   );

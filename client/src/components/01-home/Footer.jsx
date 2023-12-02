@@ -1,9 +1,9 @@
 const Footer = () => {
   return (
-    <div className="footer">
+    <footer className="footer">
       The Odin Project 2023 - Coded by{" "}
       <a href="https://github.com/oguzhan-ulutas">oguzhan-ulutas</a>
-    </div>
+    </footer>
   );
 };
 
