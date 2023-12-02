@@ -20,5 +20,7 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
     })
     .catch((error) => client.logger.error(error));
 
+  console.log(userData);
+
   res.json(userData);
 });
