@@ -223,7 +223,7 @@ export default function AssetsTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const { userAssets } = React.useContext(BotContext);
+  const { userAssets, userMarginData } = React.useContext(BotContext);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -284,7 +284,7 @@ export default function AssetsTable() {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, userMarginData]
   );
 
   return (
