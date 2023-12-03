@@ -25,7 +25,7 @@ const Home = () => {
         console.log("User data fetch error in Home component: ", err);
       });
   }, []);
-
+  console.log(userMarginData);
   return (
     <div className="home-container">
       <Body />

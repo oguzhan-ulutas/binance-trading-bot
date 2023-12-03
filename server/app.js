@@ -4,11 +4,23 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const indexRouter = require('./routes/index');
 const binanceRouter = require('./routes/binanceApiV1');
 
 const app = express();
+
+// Set up mongoose connection
+mongoose.set('strictQuery', false);
+
+const mongoDB = process.env.mongoUri;
+console.log(mongoDB);
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

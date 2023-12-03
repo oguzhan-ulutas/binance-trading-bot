@@ -9,11 +9,10 @@ function App() {
   const [userMarginData, setMarginUserData] = useState({});
 
   // Set non-zero value assets as an array
-  const userAssets = userMarginData.userAssets
-    ? userMarginData.userAssets.filter((asset) => {
-        return asset.netAsset !== "0";
-      })
+  const userAssets = userMarginData.tradeEnabled
+    ? userMarginData.userAssets
     : [];
+  console.log(userAssets);
 
   return (
     <BotContext.Provider
