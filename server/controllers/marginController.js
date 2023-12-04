@@ -10,8 +10,6 @@ const { binanceApiSecretKey } = process.env;
 // Create client
 const client = new Spot(binanceApiKey, binanceApiSecretKey);
 
-// console.log({ binanceApiKey, binanceApiSecretKey, client });
-
 exports.getUserData = asyncHandler(async (req, res, next) => {
   let userMarginData = {};
   // Get margin user data
@@ -21,12 +19,30 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
       userMarginData = { ...response.data };
     })
     .catch((error) => client.logger.error(error));
+
   // Filter zero value assets
   userMarginData = {
     ...userMarginData,
     userAssets: userMarginData.userAssets.filter((asset) => asset.netAsset != '0'),
   };
-  console.log(userMarginData);
+
+  // Find all todays registration and delete them all
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  try {
+    await Margin.deleteMany({
+      date: {
+        $gte: today, // Greater than or equal to the beginning of the day
+        $lt: endOfDay, // Less than the end of the day
+      },
+    });
+  } catch (error) {
+    console.log('Could not delete;', error);
+  }
+
   // Save user margin data
 
   const marginData = new Margin(userMarginData);
