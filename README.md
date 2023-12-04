@@ -12,6 +12,7 @@ Create .env file in server directory:
 - binanceApiSecretKey = "YOUR_BINANCE_SECRET_KEY"
 - binanceApiUrl = "https://api.binance.com"
 - clientUrl = "http://localhost:5173" If your client url different, make changes accordingly.
+- mongoUri ="mongodb://127.0.0.1:27017/binanceData" (your mongodb connection string)
 
 Also create .env file inside the client directory:
 
