@@ -19,9 +19,12 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import TimesTwoMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
 
-import Balance from "./Balance";
-import AssetsTable from "./AssetsTable";
+import Balance from "../02-margin/Balance";
+import AssetsTable from "../02-margin/AssetsTable";
+
+import { Outlet, Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -136,26 +139,59 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+          {/* MARGIN*/}
+          <Link to="/">
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                <TimesTwoMobiledataIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Margin"} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TimesTwoMobiledataIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Margin"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+
+          {/* ORDER */}
+          <Link to="/order">
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <PendingActionsIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Order"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
 
           {["Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
@@ -210,7 +246,7 @@ export default function MiniDrawer() {
         <DrawerHeader />
         <Balance />
         <Divider />
-        <AssetsTable />
+        <Outlet />
       </Box>
     </Box>
   );

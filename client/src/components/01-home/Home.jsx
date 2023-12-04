@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 
 import Footer from "./Footer";
 import { BotContext } from "../BotContext";
-import Body from "../02-body/Body";
+import Body from "./Body";
 import "./Home.css";
 
 const Home = () => {
