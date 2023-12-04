@@ -1,5 +1,7 @@
+import TotalRiskCalculator from "./TotalRiskCalculator";
+
 const Order = () => {
-  return <h1>Heloo</h1>;
+  return <TotalRiskCalculator />;
 };
 
 export default Order;
