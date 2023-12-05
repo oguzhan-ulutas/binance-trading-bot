@@ -20,6 +20,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import TimesTwoMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
 import Balance from "../02-margin/Balance";
 import AssetsTable from "../02-margin/AssetsTable";
@@ -166,7 +167,7 @@ export default function MiniDrawer() {
             </ListItem>
           </Link>
 
-          {/* ORDER */}
+          {/* ORDER CALCULATIONS*/}
           <Link to="/order">
             <ListItem disablePadding sx={{ display: "block" }}>
               <ListItemButton
@@ -186,40 +187,20 @@ export default function MiniDrawer() {
                   <PendingActionsIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Order"}
+                  primary={"Order Calculations"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
             </ListItem>
           </Link>
-
-          {["Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
         </List>
+
         <Divider />
+
         <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+          {/* BALANCE HISTORY*/}
+          <Link to="/balance-history">
+            <ListItem disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -234,12 +215,15 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <QueryStatsIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={"Balance History"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
-          ))}
+          </Link>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

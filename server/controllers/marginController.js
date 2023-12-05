@@ -53,3 +53,15 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
   }
   res.json(userMarginData);
 });
+
+// Get historic margin balances
+exports.getBalances = asyncHandler(async (req, res, next) => {
+  const balances = await Margin.find({}, 'totalCollateralValueInUSDT totalAssetOfBtc date')
+    .sort({
+      date: 1,
+    })
+    .exec();
+  console.log(balances);
+
+  res.json(balances);
+});

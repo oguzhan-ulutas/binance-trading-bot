@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 
 import { BotContext } from "../BotContext";
+import "./TotalRiskCalculator.css";
 
 const customTheme = (outerTheme) =>
   createTheme({

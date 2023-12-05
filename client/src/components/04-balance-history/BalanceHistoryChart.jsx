@@ -1,0 +1,72 @@
+import * as React from "react";
+import { LineChart } from "@mui/x-charts/LineChart";
+
+import { BotContext } from "../BotContext";
+
+export default function BalanceHistoryChart() {
+  const { serverUrl } = React.useContext(BotContext);
+  const [balances, setBalances] = React.useState([]);
+
+  React.useEffect(() => {
+    const url = `${serverUrl}/margin/balance-history`;
+
+    fetch(url, { made: "cors" })
+      .then((res) => {
+        if (res.status >= 400) {
+          throw new Error("server error");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        setBalances(res);
+      })
+      .catch((err) => {
+        console.log("Balances fetch error in BalanceHistoryCart: ", err);
+      });
+  }, []);
+
+  console.log(balances);
+  // extracting data to use in charts
+  const dates = balances.map((item) => {
+    // Extract year, month, and day from the date string
+    const [year, month, day] = item.date.substring(0, 10).split("-");
+
+    return new Date(year, month - 1, day);
+  });
+
+  const balancesUsdt = balances.map((item) => {
+    return Number(item.totalCollateralValueInUSDT);
+  });
+
+  const balancesBtc = balances.map((item) => Number(item.totalAssetOfBtc));
+
+  const valueFormatter = (date) =>
+    date.toLocaleDateString("fr-FR", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    });
+
+  return (
+    <div className="balance-chart-usdt">
+      <h2>Balance History(usdt)</h2>
+      <LineChart
+        xAxis={[
+          {
+            data: dates,
+            scaleType: "time",
+            valueFormatter,
+            // tickInterval: (time) => time.getDate() === 0,
+          },
+        ]}
+        series={[
+          {
+            data: balancesUsdt,
+          },
+        ]}
+        width={500}
+        height={300}
+      />
+    </div>
+  );
+}
