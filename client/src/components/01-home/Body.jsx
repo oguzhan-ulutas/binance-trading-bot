@@ -95,7 +95,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+export default function Body() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 

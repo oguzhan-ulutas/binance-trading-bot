@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 
 import { BotContext } from "../BotContext";
 import LongTermTable from "./LongTermTable";
+import "./Projections.css";
 
 const customTheme = (outerTheme) =>
   createTheme({
@@ -85,7 +86,7 @@ const Projections = () => {
   const [marginBalance, setMArginBalance] = React.useState(balance);
   return (
     <>
-      <div className="max-risk-usdt">
+      <div className="long-term-table">
         <h3>Long Term Projections</h3>
         <Box
           sx={{

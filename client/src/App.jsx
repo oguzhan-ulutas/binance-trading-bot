@@ -12,7 +12,6 @@ function App() {
   const userAssets = userMarginData.tradeEnabled
     ? userMarginData.userAssets
     : [];
-  console.log(userAssets);
 
   return (
     <BotContext.Provider

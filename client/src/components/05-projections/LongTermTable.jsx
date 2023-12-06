@@ -67,7 +67,7 @@ function createData(balance) {
   let balance75 = balance;
   let balance100 = balance;
 
-  for (let year = 2023; year <= 2060; year++) {
+  for (let year = 2022; year <= 2060; year++) {
     balance10 = balance10 + balance10 * 0.1;
     balance20 = balance20 + balance20 * 0.2;
     balance30 = balance30 + balance30 * 0.3;
@@ -117,6 +117,7 @@ export default function LongTermTable({ marginBalance }) {
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                   {columns.map((column) => {
                     const value = row[column.id];
+
                     let classTd = "";
                     if (value >= 50000) {
                       classTd = "yellow";
@@ -140,10 +141,12 @@ export default function LongTermTable({ marginBalance }) {
                         align={column.align}
                         className={classTd}
                       >
-                        {value.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
+                        {column.id === "year"
+                          ? value
+                          : value.toLocaleString("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            })}
                       </TableCell>
                     );
                   })}
