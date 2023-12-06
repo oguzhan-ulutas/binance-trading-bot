@@ -5,6 +5,7 @@ import ErrorPage from "./ErrorPage";
 import AssetsTable from "./02-margin/AssetsTable";
 import Order from "./03-order/Order";
 import BalanceHistoryGraph from "./04-balance-history/BalanceHistoryChart";
+import Projections from "./05-projections/Projections";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -16,6 +17,7 @@ const Router = () => {
         { index: true, element: <AssetsTable /> },
         { path: "order", element: <Order /> },
         { path: "balance-history", element: <BalanceHistoryGraph /> },
+        { path: "projections", element: <Projections /> },
       ],
     },
   ]);

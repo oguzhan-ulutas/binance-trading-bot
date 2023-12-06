@@ -26,7 +26,6 @@ export default function BalanceHistoryChart() {
       });
   }, []);
 
-  console.log(balances);
   // extracting data to use in charts
   const dates = balances.map((item) => {
     // Extract year, month, and day from the date string
@@ -47,8 +46,6 @@ export default function BalanceHistoryChart() {
       day: "2-digit",
       year: "2-digit",
     });
-
-  console.log(dates);
 
   return (
     <>
