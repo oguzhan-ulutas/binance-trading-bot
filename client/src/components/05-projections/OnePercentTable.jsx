@@ -7,91 +7,42 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-import "./LongTermTable.css";
+import { format, addDays, addWeeks, addYears } from "date-fns";
 
 const columns = [
-  { id: "year", label: "Year", minWidth: 80 },
-  { id: "balance10", label: "10%", minWidth: 100 },
-  {
-    id: "balance20",
-    label: "20%",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "balance30",
-    label: "30%",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "balance40",
-    label: "40%",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "balance50",
-    label: "50%",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "balance75",
-    label: "75%",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "balance100",
-    label: "100%",
-    minWidth: 100,
-    align: "right",
-  },
+  { id: "id", label: "id", minWidth: 50 },
+  { id: "date", label: "Date", minWidth: 80 },
+  { id: "calculatedBalance", label: "Balance", minWidth: 100 },
 ];
 
-function createData(balance) {
-  const rows = [];
+const OnePercentTable = ({ marginBalance, profit, period, interval }) => {
+  function createData(balance, profit, period, interval) {
+    const rows = [];
+    const today = new Date();
+    let calculatedBalance = balance;
 
-  let balance10 = balance;
-  let balance20 = balance;
-  let balance30 = balance;
-  let balance40 = balance;
-  let balance50 = balance;
-  let balance75 = balance;
-  let balance100 = balance;
+    for (let i = 1; i <= interval; i++) {
+      const date = new Date(today);
+      if (period === "Day") {
+        date.setDate(today.getDate() + i);
+      } else if (period === "Week") {
+        date.setDate(today.getDate() + i * 7);
+      } else {
+        date.setFullYear(today.getFullYear() + i);
+      }
 
-  for (let year = 2022; year <= 2060; year++) {
-    balance10 = balance10 + balance10 * 0.1;
-    balance20 = balance20 + balance20 * 0.2;
-    balance30 = balance30 + balance30 * 0.3;
-    balance40 = balance40 + balance40 * 0.4;
-    balance50 = balance50 + balance50 * 0.5;
-    balance75 = balance75 + balance75 * 0.75;
-    balance100 = balance100 + balance100;
-    const row = {
-      year,
-      balance10,
-      balance20,
-      balance30,
-      balance40,
-      balance50,
-      balance75,
-      balance100,
-    };
-    rows.push(row);
+      calculatedBalance =
+        calculatedBalance + (calculatedBalance * profit) / 100;
+      const row = { date, calculatedBalance: Number(calculatedBalance), id: i };
+      rows.push(row);
+    }
+    return rows;
   }
-  return rows;
-}
-
-export default function LongTermTable({ marginBalance }) {
-  const rows = createData(Number(marginBalance));
-
+  const rows = createData(marginBalance, profit, period, interval);
+  rows.map((row) => {
+    console.log(row[columns[0].id]);
+  });
+  console.log(rows);
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -117,20 +68,20 @@ export default function LongTermTable({ marginBalance }) {
                     const value = row[column.id];
 
                     let classTd = "";
-                    if (value >= 50000) {
+                    if (column.id !== "date" && value >= 50000) {
                       classTd = "yellow";
                     }
-                    if (value >= 100000) {
+                    if (column.id !== "date" && value >= 100000) {
                       classTd = "orange";
                     }
 
-                    if (value >= 1000000) {
+                    if (column.id !== "date" && value >= 1000000) {
                       classTd = "purple";
                     }
-                    if (value >= 10000000) {
+                    if (column.id !== "date" && value >= 10000000) {
                       classTd = "red";
                     }
-                    if (value >= 100000000) {
+                    if (column.id !== "date" && value >= 100000000) {
                       classTd = "brown";
                     }
                     return (
@@ -139,8 +90,10 @@ export default function LongTermTable({ marginBalance }) {
                         align={column.align}
                         className={classTd}
                       >
-                        {column.id === "year"
+                        {column.id === "id"
                           ? value
+                          : column.id === "date"
+                          ? format(value, "yyyy-MM-dd")
                           : value.toLocaleString("en-US", {
                               style: "currency",
                               currency: "USD",
@@ -156,4 +109,6 @@ export default function LongTermTable({ marginBalance }) {
       </TableContainer>
     </Paper>
   );
-}
+};
+
+export default OnePercentTable;
