@@ -21,6 +21,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import TimesTwoMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 
 import Balance from "../02-margin/Balance";
 import AssetsTable from "../02-margin/AssetsTable";
@@ -242,7 +243,7 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  <QueryStatsIcon />
+                  <CastForEducationIcon />
                 </ListItemIcon>
                 <ListItemText
                   primary={"Projections"}
