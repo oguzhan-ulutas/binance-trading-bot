@@ -7,39 +7,28 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-import { format, addDays, addWeeks, addYears } from "date-fns";
-
 const columns = [
-  { id: "id", label: "id", minWidth: 50 },
-  { id: "date", label: "Date", minWidth: 80 },
-  { id: "calculatedBalance", label: "Balance", minWidth: 100 },
+  { id: "id", label: "id", minWidth: 80 },
+  { id: "percent", label: "Percent(%)", minWidth: 100 },
+  { id: "profit", label: "Profit(usdt)", minWidth: 100 },
+  { id: "loss", label: "Loss(usdt)", minWidth: 100 },
 ];
 
-const OnePercentTable = ({ marginBalance, profit, period, interval }) => {
-  function createData(balance, profit, period, interval) {
-    const rows = [];
-    const today = new Date();
-    let calculatedBalance = balance;
+function createData(size) {
+  const rows = [];
 
-    for (let i = 1; i <= interval; i++) {
-      const date = new Date(today);
-      if (period === "Day") {
-        date.setDate(today.getDate() + i);
-      } else if (period === "Week") {
-        date.setDate(today.getDate() + i * 7);
-      } else {
-        date.setFullYear(today.getFullYear() + i);
-      }
-
-      calculatedBalance =
-        calculatedBalance + (calculatedBalance * profit) / 100;
-      const row = { date, calculatedBalance: Number(calculatedBalance), id: i };
-      rows.push(row);
-    }
-    return rows;
+  for (let i = 1; i <= 100; i++) {
+    const profit = (size * i) / 100;
+    const loss = -(size * i) / 100;
+    const row = { id: i, percent: i, profit, loss };
+    rows.push(row);
   }
-  const rows = createData(marginBalance, profit, period, interval);
+  return rows;
+}
 
+const OrderProfitAndLoss = ({ tradeSize }) => {
+  const rows = createData(tradeSize);
+  console.log(rows);
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -65,20 +54,20 @@ const OnePercentTable = ({ marginBalance, profit, period, interval }) => {
                     const value = row[column.id];
 
                     let classTd = "";
-                    if (column.id !== "date" && value >= 50000) {
+                    if (value >= 50 || value <= -50) {
                       classTd = "yellow";
                     }
-                    if (column.id !== "date" && value >= 100000) {
+                    if (value >= 100 || value <= -100) {
                       classTd = "orange";
                     }
 
-                    if (column.id !== "date" && value >= 1000000) {
+                    if (value >= 250 || value <= -250) {
                       classTd = "purple";
                     }
-                    if (column.id !== "date" && value >= 10000000) {
+                    if (value >= 500 || value <= -500) {
                       classTd = "red";
                     }
-                    if (column.id !== "date" && value >= 100000000) {
+                    if (value >= 1000 || value <= -1000) {
                       classTd = "brown";
                     }
                     return (
@@ -89,8 +78,8 @@ const OnePercentTable = ({ marginBalance, profit, period, interval }) => {
                       >
                         {column.id === "id"
                           ? value
-                          : column.id === "date"
-                          ? format(value, "yyyy-MM-dd")
+                          : column.id === "percent"
+                          ? `${value}%`
                           : value.toLocaleString("en-US", {
                               style: "currency",
                               currency: "USD",
@@ -108,4 +97,4 @@ const OnePercentTable = ({ marginBalance, profit, period, interval }) => {
   );
 };
 
-export default OnePercentTable;
+export default OrderProfitAndLoss;

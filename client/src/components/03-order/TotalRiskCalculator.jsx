@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 
 import { BotContext } from "../BotContext";
 import "./TotalRiskCalculator.css";
+import OrderProfitAndLoss from "./OrderProfitAndLoss";
 
 const customTheme = (outerTheme) =>
   createTheme({
@@ -82,7 +83,7 @@ export default function TotalRiskCalculator() {
   const { userMarginData } = React.useContext(BotContext);
   const balance = Number(userMarginData.totalCollateralValueInUSDT);
 
-  const [marginBalance, setMArginBalance] = React.useState(balance);
+  const [marginBalance, setMarginBalance] = React.useState(balance);
   const [riskPercent, setRiskPercent] = React.useState(5);
   const [riskUsdt, setRiskUsdt] = React.useState(0);
   const [tradeRiskPercent, setTradeRiskPercent] = React.useState(5);
@@ -99,10 +100,8 @@ export default function TotalRiskCalculator() {
   }, [marginBalance, riskPercent]);
 
   const calculateMaxTradeSize = (totalMaxRisk, tradeRisk) => {
-    console.log((totalMaxRisk / tradeRisk) * 0.01);
-
     const maxRisk = Number(totalMaxRisk) / (Number(tradeRisk) * 0.01);
-    console.log(maxRisk);
+
     setTradeSize(maxRisk);
   };
 
@@ -126,7 +125,7 @@ export default function TotalRiskCalculator() {
               label="Margin Balance(usdt)"
               variant="standard"
               defaultValue={balance.toFixed(2)}
-              onChange={(e) => setMArginBalance(Number(e.target.value))}
+              onChange={(e) => setMarginBalance(Number(e.target.value))}
             />
             <TextField
               label="Risk(%)"
@@ -178,6 +177,7 @@ export default function TotalRiskCalculator() {
               label="Trade Size(usdt)"
               variant="standard"
               value={tradeSize.toFixed(2)}
+              onChange={(e) => setTradeSize(Number(e.target.value))}
             />
           </ThemeProvider>
         </Box>
@@ -186,6 +186,11 @@ export default function TotalRiskCalculator() {
         )} usdt and want to open a new trade with ${tradeRiskPercent}% risk, you can open a new trade with max-size of ${tradeSize.toFixed(
           2
         )} usdt.`}</p>
+
+        <Divider />
+
+        <h3>Profit And Loss Table</h3>
+        <OrderProfitAndLoss tradeSize={tradeSize} />
       </div>
     </>
   );
