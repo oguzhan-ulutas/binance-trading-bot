@@ -81,7 +81,7 @@ const customTheme = (outerTheme) =>
 export default function TotalRiskCalculator() {
   const outerTheme = useTheme();
   const { userMarginData } = React.useContext(BotContext);
-  const balance = Number(userMarginData.totalCollateralValueInUSDT);
+  const balance = parseFloat(userMarginData.netBalance);
 
   const [marginBalance, setMarginBalance] = React.useState(balance);
   const [riskPercent, setRiskPercent] = React.useState(5);

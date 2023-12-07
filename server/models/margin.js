@@ -13,6 +13,7 @@ const MarginSchema = new Schema({
   totalNetAssetOfBtc: { type: String },
   collateralMarginLevel: { type: String },
   totalCollateralValueInUSDT: { type: String },
+  netBalance: { type: String },
   date: { type: Date, default: Date.now },
   userAssets: { type: Array },
 });

@@ -27,8 +27,8 @@ const Balance = () => {
       {userMarginData.totalCollateralValueInUSDT ? (
         <Typography variant="h6" gutterBottom>
           Tolal Balance: <br />{" "}
-          {userMarginData.totalCollateralValueInUSDT.toFixed(2)} USDT, <br />
-          {userMarginData.totalAssetOfBtc} BTC <br />
+          {parseFloat(userMarginData.netBalance).toFixed(2)} USDT, <br />
+          {userMarginData.totalNetAssetOfBtc} BTC <br />
         </Typography>
       ) : null}
     </div>

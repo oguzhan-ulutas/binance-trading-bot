@@ -38,7 +38,7 @@ export default function BalanceHistoryChart() {
     return Number(item.totalCollateralValueInUSDT);
   });
 
-  const balancesBtc = balances.map((item) => Number(item.totalAssetOfBtc));
+  const balancesBtc = balances.map((item) => Number(item.totalNetAssetOfBtc));
 
   const valueFormatter = (date) =>
     date.toLocaleDateString("fr-FR", {
