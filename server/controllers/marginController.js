@@ -32,8 +32,6 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
     parseFloat(userMarginData.totalCollateralValueInUSDT) - parseFloat(usdt[0].borrowed);
   userMarginData.netBalance = `${netBalance}`;
 
-  console.log(userMarginData);
-
   // Find all todays registration and delete them all
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -80,10 +78,17 @@ exports.getDailyUsdtBalance = asyncHandler(async (req, res, next) => {
       date: 1,
     })
     .exec();
+
+  console.log(balances);
   res.json(dailyUsdtBalances);
 });
 
 // Get daily btc margin balance
 exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
-  next();
+  const dailyBtcBalances = await Margin.find({}, 'totalNetAssetOfBtc date')
+    .sort({
+      date: 1,
+    })
+    .exec();
+  res.json(dailyBtcBalances);
 });
