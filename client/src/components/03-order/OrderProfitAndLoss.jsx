@@ -16,19 +16,22 @@ const columns = [
 
 function createData(size) {
   const rows = [];
+  let idNum = 1;
 
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 0.1; i <= 100; i += 0.1) {
     const profit = (size * i) / 100;
-    const loss = -(size * i) / 100;
-    const row = { id: i, percent: i, profit, loss };
+    const loss = -profit;
+
+    const row = { id: idNum, percent: i, profit, loss };
     rows.push(row);
+    idNum++;
   }
   return rows;
 }
 
 const OrderProfitAndLoss = ({ tradeSize }) => {
   const rows = createData(tradeSize);
-  console.log(rows);
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -79,7 +82,7 @@ const OrderProfitAndLoss = ({ tradeSize }) => {
                         {column.id === "id"
                           ? value
                           : column.id === "percent"
-                          ? `${value}%`
+                          ? `${value.toFixed(1)}%`
                           : value.toLocaleString("en-US", {
                               style: "currency",
                               currency: "USD",

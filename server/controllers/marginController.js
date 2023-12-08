@@ -64,12 +64,26 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
 
 // Get historic margin balances
 exports.getBalances = asyncHandler(async (req, res, next) => {
-  const balances = await Margin.find({}, 'totalCollateralValueInUSDT totalNetAssetOfBtc date')
+  const balances = await Margin.find({}, 'netBalance totalNetAssetOfBtc date')
     .sort({
       date: 1,
     })
     .exec();
-  console.log(balances);
 
   res.json(balances);
+});
+
+// Get daily usdt margin balance
+exports.getDailyUsdtBalance = asyncHandler(async (req, res, next) => {
+  const dailyUsdtBalances = await Margin.find({}, 'netBalance date')
+    .sort({
+      date: 1,
+    })
+    .exec();
+  res.json(dailyUsdtBalances);
+});
+
+// Get daily btc margin balance
+exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
+  next();
 });

@@ -3,6 +3,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import Divider from "@mui/material/Divider";
 
 import { BotContext } from "../BotContext";
+import PercentageDailyCharts from "./PercentageDailyCharts";
 
 export default function BalanceHistoryChart() {
   const { serverUrl } = React.useContext(BotContext);
@@ -35,7 +36,7 @@ export default function BalanceHistoryChart() {
   });
 
   const balancesUsdt = balances.map((item) => {
-    return Number(item.totalCollateralValueInUSDT);
+    return Number(item.netBalance);
   });
 
   const balancesBtc = balances.map((item) => Number(item.totalNetAssetOfBtc));
@@ -92,6 +93,9 @@ export default function BalanceHistoryChart() {
           height={300}
         />
       </div>
+
+      <Divider />
+      <PercentageDailyCharts />
     </>
   );
 }

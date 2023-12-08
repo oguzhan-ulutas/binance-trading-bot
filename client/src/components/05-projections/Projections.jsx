@@ -86,7 +86,7 @@ const customTheme = (outerTheme) =>
 const Projections = () => {
   const outerTheme = useTheme();
   const { userMarginData } = React.useContext(BotContext);
-  const balance = Number(userMarginData.totalCollateralValueInUSDT);
+  const balance = Number(userMarginData.netBalance);
 
   const [marginBalance, setMarginBalance] = React.useState(balance);
 
