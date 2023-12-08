@@ -79,7 +79,6 @@ exports.getDailyUsdtBalance = asyncHandler(async (req, res, next) => {
     })
     .exec();
 
-  console.log(balances);
   res.json(dailyUsdtBalances);
 });
 
@@ -90,5 +89,6 @@ exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
       date: 1,
     })
     .exec();
+
   res.json(dailyBtcBalances);
 });

@@ -56,11 +56,9 @@ const PercentageDailyCharts = ({ dates }) => {
 
   const dataUsdt = balanceUsdt.map((item) => item.netBalance);
   const dataBtc = balanceBtc.map((item) => item.totalNetAssetOfBtc);
-  console.log(dataBtc);
-  console.log(dataUsdt);
 
   function calculateDailyPercentageChange(balances) {
-    const percentageChanges = [0];
+    const percentageChanges = ["0"];
 
     for (let i = 1; i < balances.length; i++) {
       const currentBalance = parseFloat(balances[i]);
@@ -80,11 +78,11 @@ const PercentageDailyCharts = ({ dates }) => {
 
   const percentageUsdt = calculateDailyPercentageChange(dataUsdt);
   const percentageBtc = calculateDailyPercentageChange(dataBtc);
-  console.log(percentageBtc);
+  console.log(percentageBtc, percentageUsdt);
 
   return (
     <>
-      {dataBtc.length > 0 ? (
+      {percentageUsdt.length > 0 && percentageBtc.length > 0 ? (
         <>
           <div className="balance-chart-usdt">
             <h2>Daily Change USDT(%)</h2>

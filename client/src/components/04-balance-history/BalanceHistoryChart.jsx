@@ -51,54 +51,56 @@ export default function BalanceHistoryChart() {
   return (
     <>
       <h2>DAILY</h2>
-      <div className="daily">
-        <div className="balance-chart-usdt">
-          <h2>Balance History(usdt)</h2>
-          <LineChart
-            xAxis={[
-              {
-                data: dates,
-                scaleType: "time",
-                valueFormatter,
-                tickLabelInterval: (time) => time.getHours() === 0,
-              },
-            ]}
-            series={[
-              {
-                data: balancesUsdt,
-              },
-            ]}
-            width={500}
-            height={300}
-          />
+      {dates.length > 0 ? (
+        <div className="daily">
+          <div className="balance-chart-usdt">
+            <h2>Balance History(usdt)</h2>
+            <LineChart
+              xAxis={[
+                {
+                  data: dates,
+                  scaleType: "time",
+                  valueFormatter,
+                  tickLabelInterval: (time) => time.getHours() === 0,
+                },
+              ]}
+              series={[
+                {
+                  data: balancesUsdt,
+                },
+              ]}
+              width={500}
+              height={300}
+            />
+          </div>
+
+          <Divider />
+
+          <div className="balance-chart-btc">
+            <h2>Balance History(btc)</h2>
+            <LineChart
+              xAxis={[
+                {
+                  data: dates,
+                  scaleType: "time",
+                  valueFormatter,
+                  tickLabelInterval: (time) => time.getHours() === 0,
+                },
+              ]}
+              series={[
+                {
+                  data: balancesBtc,
+                },
+              ]}
+              width={500}
+              height={300}
+            />
+          </div>
+
+          <Divider />
+          <PercentageDailyCharts dates={dates} />
         </div>
-
-        <Divider />
-
-        <div className="balance-chart-btc">
-          <h2>Balance History(btc)</h2>
-          <LineChart
-            xAxis={[
-              {
-                data: dates,
-                scaleType: "time",
-                valueFormatter,
-                tickLabelInterval: (time) => time.getHours() === 0,
-              },
-            ]}
-            series={[
-              {
-                data: balancesBtc,
-              },
-            ]}
-            width={500}
-            height={300}
-          />
-        </div>
-
-        <Divider />
-        <PercentageDailyCharts dates={dates} />
-      </div>
+      ) : null}
     </>
   );
 }
