@@ -16,15 +16,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import TimesTwoMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
 import Balance from "../02-margin/Balance";
-import AssetsTable from "../02-margin/AssetsTable";
 
 import { Outlet, Link } from "react-router-dom";
 
@@ -199,6 +197,33 @@ export default function Body() {
         <Divider />
 
         <List>
+          {/* Trades*/}
+          <Link to="/balance-history">
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <StorefrontIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Trades"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+
           {/* BALANCE HISTORY*/}
           <Link to="/balance-history">
             <ListItem disablePadding sx={{ display: "block" }}>
