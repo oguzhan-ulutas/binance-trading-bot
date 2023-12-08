@@ -17,4 +17,7 @@ router.get('/margin/daily-usdt', marginController.getDailyUsdtBalance);
 // Get daily btc margin balance
 router.get('/margin/daily-btc', marginController.getDailyBtcBalance);
 
+// Get trades
+router.post('/margin/get-trade', marginController.getTrade);
+
 module.exports = router;

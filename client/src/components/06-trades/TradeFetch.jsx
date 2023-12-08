@@ -7,15 +7,22 @@ import "./TradeFetch.css";
 import { BotContext } from "../BotContext";
 
 const TradeFetch = () => {
-  const [pair, setPair] = React.useState("");
+  const [pair, setPair] = React.useState("BTCUSDT");
   const [trade, setTrade] = React.useState([]);
   const { serverUrl } = React.useContext(BotContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const url = `${serverUrl}/get-trade`;
-    fetch(url, { mode: "cors" })
+    const url = `${serverUrl}/margin/get-trade`;
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pair }),
+    })
       .then((res) => {
         if (res.status >= 400) {
           throw new Error("server error");
@@ -38,16 +45,18 @@ const TradeFetch = () => {
         }}
         noValidate
         autoComplete="off"
-        onSubmit={handleSubmit}
       >
         <TextField
           id="standard-basic"
           label="Pair"
           variant="standard"
           placeholder="BTCUSDT"
-          onChange={(e) => setPair(e.target.value)}
+          defaultValue={"BTCUSDT"}
+          onChange={(e) => setPair(e.target.value.toUpperCase())}
         />
-        <Button variant="outlined">Bring Last Trades</Button>
+        <Button variant="outlined" onClick={handleSubmit}>
+          Bring Last Trades
+        </Button>
       </Box>
     </>
   );

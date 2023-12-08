@@ -3,6 +3,7 @@ const Spot = require('@binance/connector/src/spot');
 require('dotenv').config();
 
 const Margin = require('../models/margin');
+const Trade = require('../models/trade');
 
 const { binanceApiKey } = process.env;
 const { binanceApiSecretKey } = process.env;
@@ -91,4 +92,23 @@ exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
     .exec();
 
   res.json(dailyBtcBalances);
+});
+
+// Get trades
+exports.getTrade = asyncHandler(async (req, res, next) => {
+  let trades = {};
+  await client
+    .marginMyTrades(req.body.pair, { limit: 1 })
+    .then((res) => (trades = res.data))
+    .catch((error) => client.logger.error(error));
+
+  const trade = new Trade(trades[0]);
+
+  try {
+    await trade.save();
+  } catch (error) {
+    console.error(error);
+  }
+
+  res.json(trade);
 });
