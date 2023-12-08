@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const OrderSchema = new Schema({
   symbol: { type: String },
   orderId: { type: Number },
-  clientOrderId: { type: String },
+  clientOrderId: { type: String, unique: true },
   price: { type: String },
   origQty: { type: String },
   executedQty: { type: String },

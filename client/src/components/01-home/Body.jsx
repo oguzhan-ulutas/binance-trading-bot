@@ -198,7 +198,7 @@ export default function Body() {
 
         <List>
           {/* Trades*/}
-          <Link to="/balance-history">
+          <Link to="/trades">
             <ListItem disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
