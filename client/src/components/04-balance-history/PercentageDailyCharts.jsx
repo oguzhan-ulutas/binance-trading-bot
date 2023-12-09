@@ -78,7 +78,6 @@ const PercentageDailyCharts = ({ dates }) => {
 
   const percentageUsdt = calculateDailyPercentageChange(dataUsdt);
   const percentageBtc = calculateDailyPercentageChange(dataBtc);
-  console.log(percentageBtc, percentageUsdt);
 
   return (
     <>

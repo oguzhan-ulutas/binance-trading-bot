@@ -1,9 +1,9 @@
-import TradeFetch from "./TradeFetch";
+import OrderFetch from "./OrderFetch";
 
 const Trades = () => {
   return (
     <>
-      <TradeFetch />
+      <OrderFetch />
     </>
   );
 };

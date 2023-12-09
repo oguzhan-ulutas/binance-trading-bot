@@ -197,8 +197,8 @@ export default function Body() {
         <Divider />
 
         <List>
-          {/* Trades*/}
-          <Link to="/trades">
+          {/* ORDERS*/}
+          <Link to="/orders">
             <ListItem disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
@@ -217,7 +217,7 @@ export default function Body() {
                   <StorefrontIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Trades"}
+                  primary={"Orders"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>

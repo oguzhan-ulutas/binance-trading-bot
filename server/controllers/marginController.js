@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const Margin = require('../models/margin');
 const Trade = require('../models/trade');
+const Order = require('../models/order');
 
 const { binanceApiKey } = process.env;
 const { binanceApiSecretKey } = process.env;
@@ -94,35 +95,37 @@ exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
   res.json(dailyBtcBalances);
 });
 
-// Get trades
-exports.getTrade = asyncHandler(async (req, res, next) => {
-  let trades = {};
+// Get orders
+exports.getOrder = asyncHandler(async (req, res, next) => {
+  let trade = {};
   // Get orderid of last trade
   await client
     .marginMyTrades(req.body.pair, { limit: 1 })
-    .then((res) => (trades = res.data))
+    .then((res) => ([trade] = res.data))
     .catch((error) => client.logger.error(error));
 
-  const { orderId } = trades[0];
+  const { orderId } = trade;
 
-  // Fetch all trades of that id
-
+  // Fetch order of that id
+  let order = {};
   await client
     .marginOrder(req.body.pair, {
       orderId,
     })
-    .then((response) => client.logger.log(response.data))
+    .then((response) => (order = response.data))
     .catch((error) => client.logger.error(error));
 
-  console.log(trades);
-
-  const trade = new Trade(trades[0]);
+  const newOrder = new Order(order);
 
   try {
-    await trade.save();
+    await Order.findOneAndUpdate({ orderId: newOrder.orderId }, newOrder, {
+      upsert: true, // If no document is found, create a new one
+      new: true, // Return the updated document
+      runValidators: true, // Run validation on update
+    });
   } catch (error) {
     console.error(error);
   }
 
-  res.json(trade);
+  res.json(newOrder);
 });

@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import "./OrderFetch.css";
 import { BotContext } from "../BotContext";
 
-const TradeFetch = () => {
+const OrderFetch = () => {
   const [pair, setPair] = React.useState("BTCUSDT");
   const [trade, setTrade] = React.useState([]);
   const { serverUrl } = React.useContext(BotContext);
@@ -14,7 +14,7 @@ const TradeFetch = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const url = `${serverUrl}/margin/get-trade`;
+    const url = `${serverUrl}/margin/get-order`;
     fetch(url, {
       method: "POST",
       mode: "cors",
@@ -63,4 +63,4 @@ const TradeFetch = () => {
   );
 };
 
-export default TradeFetch;
+export default OrderFetch;
