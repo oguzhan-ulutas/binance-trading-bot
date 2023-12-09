@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import "./TradeFetch.css";
+import "./OrderFetch.css";
 import { BotContext } from "../BotContext";
 
 const TradeFetch = () => {
@@ -31,6 +31,7 @@ const TradeFetch = () => {
       })
       .then((res) => {
         setTrade(res);
+        console.log(trade);
       })
       .catch((err) => {
         console.log("Trade fetch error: ", err);

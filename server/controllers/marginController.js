@@ -97,10 +97,24 @@ exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
 // Get trades
 exports.getTrade = asyncHandler(async (req, res, next) => {
   let trades = {};
+  // Get orderid of last trade
   await client
     .marginMyTrades(req.body.pair, { limit: 1 })
     .then((res) => (trades = res.data))
     .catch((error) => client.logger.error(error));
+
+  const { orderId } = trades[0];
+
+  // Fetch all trades of that id
+
+  await client
+    .marginOrder(req.body.pair, {
+      orderId,
+    })
+    .then((response) => client.logger.log(response.data))
+    .catch((error) => client.logger.error(error));
+
+  console.log(trades);
 
   const trade = new Trade(trades[0]);
 
