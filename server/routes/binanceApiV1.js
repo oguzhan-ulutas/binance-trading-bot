@@ -20,4 +20,7 @@ router.get('/margin/daily-btc', marginController.getDailyBtcBalance);
 // Get order
 router.post('/margin/get-order', marginController.getOrder);
 
+// Get order by name
+router.post('margin/orderbtname', marginController.getOrderByName);
+
 module.exports = router;

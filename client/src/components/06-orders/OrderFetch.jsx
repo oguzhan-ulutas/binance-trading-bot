@@ -31,7 +31,6 @@ const OrderFetch = () => {
       })
       .then((res) => {
         setTrade(res);
-        console.log(trade);
       })
       .catch((err) => {
         console.log("Trade fetch error: ", err);

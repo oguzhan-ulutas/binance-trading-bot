@@ -16,7 +16,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import { BotContext } from "../BotContext";
 
-function createData(name, borrowed, free, interest, locked, netAsset) {
+function createData(name, borrowed, free, interest, locked, netAsset, history) {
   return {
     name,
     borrowed,
@@ -24,18 +24,7 @@ function createData(name, borrowed, free, interest, locked, netAsset) {
     interest,
     locked,
     netAsset,
-    history: [
-      {
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      {
-        date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
-      },
-    ],
+    history,
   };
 }
 
@@ -133,24 +122,53 @@ Row.propTypes = {
 //   createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
 // ];
 const OrderTable = () => {
-  const { userAssets } = React.useContext(BotContext);
+  const { userAssets, serverUrl } = React.useContext(BotContext);
 
   console.log(userAssets);
 
   const rows = [];
+  let history = [];
   userAssets.map((asset) => {
+    fetchAssetOrders(asset.asset);
+
     const row = createData(
       asset.asset,
       asset.borrowed,
       asset.free,
       asset.interest,
       asset.locked,
-      asset.netAsset
+      asset.netAsset,
+      history
     );
     rows.push(row);
   }),
     rows.sort((a, b) => a.name.localeCompare(b.name));
   console.log(rows);
+
+  const fetchAssetOrders = (pair) => {
+    const url = `${serverUrl}/orderbyname`;
+
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pair }),
+    })
+      .then((res) => {
+        if (res.status >= 400) {
+          throw new Error("server error");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        history = res;
+      })
+      .catch((err) => {
+        console.log("Trade fetch error: ", err);
+      });
+  };
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">

@@ -129,3 +129,6 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 
   res.json(newOrder);
 });
+
+// Get order by name
+exports.getOrderByName = asyncHandler((req, res, next) => {});
