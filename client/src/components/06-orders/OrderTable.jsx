@@ -63,7 +63,8 @@ function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Order ID</TableCell>
+                    <TableCell>Pair</TableCell>
+                    <TableCell align="right">Order ID</TableCell>
                     <TableCell align="right">Date</TableCell>
                     <TableCell align="right">Side</TableCell>
                     <TableCell align="right">Price</TableCell>
@@ -75,15 +76,25 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                    <TableRow key={historyRow.orderId}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {historyRow.symbol}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
+                      <TableCell>{historyRow.orderId}</TableCell>
                       <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
+                        {`${historyRow.time.slice(
+                          0,
+                          10
+                        )} / ${historyRow.time.slice(11, 19)}`}
                       </TableCell>
+                      <TableCell align="right">{historyRow.side}</TableCell>
+                      <TableCell align="right">{historyRow.price}</TableCell>
+                      <TableCell align="right">{historyRow.origQty}</TableCell>
+                      <TableCell align="right">
+                        {historyRow.executedQty}
+                      </TableCell>
+                      <TableCell align="right">{historyRow.status}</TableCell>
+                      <TableCell align="right">{historyRow.type}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -96,86 +107,67 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
-// const rows = [
-//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0, 3.99),
-//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3, 4.99),
-//   createData("Eclair", 262, 16.0, 24, 6.0, 3.79),
-//   createData("Cupcake", 305, 3.7, 67, 4.3, 2.5),
-//   createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
-// ];
 const OrderTable = () => {
   const { userAssets, serverUrl } = React.useContext(BotContext);
+  const [rows, setRows] = React.useState([]);
 
-  console.log(userAssets);
+  async function fetchAssetOrders(pair) {
+    const url = `${serverUrl}/margin/orderbyname`;
 
-  const rows = [];
-  let history = [];
-  userAssets.map((asset) => {
-    fetchAssetOrders(asset.asset);
-
-    const row = createData(
-      asset.asset,
-      asset.borrowed,
-      asset.free,
-      asset.interest,
-      asset.locked,
-      asset.netAsset,
-      history
-    );
-    rows.push(row);
-  }),
-    rows.sort((a, b) => a.name.localeCompare(b.name));
-  console.log(rows);
-
-  const fetchAssetOrders = (pair) => {
-    const url = `${serverUrl}/orderbyname`;
-
-    fetch(url, {
+    const result = await fetch(url, {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ pair }),
-    })
-      .then((res) => {
-        if (res.status >= 400) {
-          throw new Error("server error");
-        }
-        return res.json();
-      })
-      .then((res) => {
-        history = res;
-      })
-      .catch((err) => {
-        console.log("Trade fetch error: ", err);
+    });
+
+    if (result.status >= 400) {
+      throw new Error("server error");
+    }
+    const data = await result.json();
+
+    return data;
+  }
+
+  React.useEffect(() => {
+    const fetchDataForAssets = async () => {
+      const promises = userAssets.map(async (asset) => {
+        const history = await fetchAssetOrders(asset.asset);
+
+        return createData(
+          asset.asset,
+          asset.borrowed,
+          asset.free,
+          asset.interest,
+          asset.locked,
+          asset.netAsset,
+          history.orders
+        );
       });
-  };
+
+      try {
+        const rowsArray = await Promise.all(promises);
+        setRows(rowsArray);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchDataForAssets();
+  }, [userAssets]);
+
+  rows.sort((a, b) => a.name.localeCompare(b.name));
+  console.log(rows);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Pair</TableCell>
+            <TableCell>Asset</TableCell>
             <TableCell align="right">Borrowed</TableCell>
             <TableCell align="right">Free</TableCell>
             <TableCell align="right">Interest</TableCell>

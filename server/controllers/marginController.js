@@ -131,4 +131,18 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 });
 
 // Get order by name
-exports.getOrderByName = asyncHandler((req, res, next) => {});
+exports.getOrderByName = asyncHandler(async (req, res, next) => {
+  // Dynamically create a regular expression
+  const regex = new RegExp(`^${req.body.pair}`);
+
+  const orders = await Order.find(
+    { symbol: regex },
+    'symbol orderId price origQty executedQty status type side time ',
+  )
+    .sort({
+      date: 1,
+    })
+    .exec();
+
+  res.json({ orders });
+});
