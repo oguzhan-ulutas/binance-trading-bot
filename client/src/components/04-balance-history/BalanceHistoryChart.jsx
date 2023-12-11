@@ -1,6 +1,7 @@
 import * as React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import Divider from "@mui/material/Divider";
+import { Box } from "@mui/material";
 
 import { BotContext } from "../BotContext";
 import PercentageDailyCharts from "./PercentageDailyCharts";
@@ -62,6 +63,11 @@ export default function BalanceHistoryChart() {
                   scaleType: "time",
                   valueFormatter,
                   tickLabelInterval: (time) => time.getHours() === 0,
+                  tickLabelStyle: {
+                    angle: 310,
+                    textAnchor: "end",
+                    fontSize: 10,
+                  },
                 },
               ]}
               series={[
@@ -69,12 +75,13 @@ export default function BalanceHistoryChart() {
                   data: balancesUsdt,
                 },
               ]}
-              width={500}
-              height={300}
+              width={1000}
+              height={500}
             />
           </div>
-
-          <Divider />
+          <Box my={5}>
+            <Divider />
+          </Box>
 
           <div className="balance-chart-btc">
             <h2>Balance History(btc)</h2>
@@ -85,6 +92,11 @@ export default function BalanceHistoryChart() {
                   scaleType: "time",
                   valueFormatter,
                   tickLabelInterval: (time) => time.getHours() === 0,
+                  tickLabelStyle: {
+                    angle: 310,
+                    textAnchor: "end",
+                    fontSize: 10,
+                  },
                 },
               ]}
               series={[
@@ -92,12 +104,15 @@ export default function BalanceHistoryChart() {
                   data: balancesBtc,
                 },
               ]}
-              width={500}
-              height={300}
+              width={1000}
+              height={500}
             />
           </div>
 
-          <Divider />
+          <Box my={5}>
+            <Divider />
+          </Box>
+
           <PercentageDailyCharts dates={dates} />
         </div>
       ) : null}

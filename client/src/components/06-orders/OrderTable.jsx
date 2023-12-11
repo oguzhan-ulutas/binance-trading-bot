@@ -45,7 +45,7 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {`${row.name} (${row.history.length})`}
         </TableCell>
         <TableCell align="right">{row.borrowed}</TableCell>
         <TableCell align="right">{row.free}</TableCell>
@@ -54,7 +54,7 @@ function Row(props) {
         <TableCell align="right">{row.netAsset}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
@@ -149,6 +149,8 @@ const OrderTable = () => {
 
       try {
         const rowsArray = await Promise.all(promises);
+        console.log(rowsArray);
+        rowsArray.sort((a, b) => a.name.localeCompare(b.name));
         setRows(rowsArray);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -158,7 +160,6 @@ const OrderTable = () => {
     fetchDataForAssets();
   }, [userAssets]);
 
-  rows.sort((a, b) => a.name.localeCompare(b.name));
   console.log(rows);
 
   return (

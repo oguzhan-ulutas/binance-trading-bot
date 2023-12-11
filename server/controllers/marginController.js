@@ -140,9 +140,35 @@ exports.getOrderByName = asyncHandler(async (req, res, next) => {
     'symbol orderId price origQty executedQty status type side time ',
   )
     .sort({
-      date: 1,
+      time: -1,
     })
     .exec();
+  console.log(orders);
 
   res.json({ orders });
 });
+
+const getAllOrders = async () => {
+  let orders = [];
+  await client
+    .marginAllOrders('SOLUSDT')
+    .then((response) => (orders = response.data))
+    .catch((error) => client.logger.error(error));
+
+  orders.forEach(async (order) => {
+    const newOrder = new Order(order);
+    try {
+      await Order.findOneAndUpdate({ orderId: newOrder.orderId }, newOrder, {
+        upsert: true, // If no document is found, create a new one
+        new: true, // Return the updated document
+        runValidators: true, // Run validation on update
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  console.log(orders);
+};
+
+// getAllOrders();

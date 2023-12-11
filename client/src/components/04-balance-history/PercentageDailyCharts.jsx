@@ -1,6 +1,7 @@
 import * as React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import Divider from "@mui/material/Divider";
+import { Box } from "@mui/material";
 
 import { BotContext } from "../BotContext";
 
@@ -93,6 +94,11 @@ const PercentageDailyCharts = ({ dates }) => {
                   scaleType: "time",
                   valueFormatter,
                   tickLabelInterval: (time) => time.getHours() === 0,
+                  tickLabelStyle: {
+                    angle: 310,
+                    textAnchor: "end",
+                    fontSize: 10,
+                  },
                 },
               ]}
               series={[
@@ -100,12 +106,13 @@ const PercentageDailyCharts = ({ dates }) => {
                   data: percentageUsdt,
                 },
               ]}
-              width={500}
-              height={300}
+              width={1000}
+              height={500}
             />
           </div>
-
-          <Divider />
+          <Box my={5}>
+            <Divider />
+          </Box>
 
           <div className="balance-chart-usdt">
             <h2>Daily Change BTC(%)</h2>
@@ -116,6 +123,11 @@ const PercentageDailyCharts = ({ dates }) => {
                   scaleType: "time",
                   valueFormatter,
                   tickLabelInterval: (time) => time.getHours() === 0,
+                  tickLabelStyle: {
+                    angle: 310,
+                    textAnchor: "end",
+                    fontSize: 10,
+                  },
                 },
               ]}
               series={[
@@ -123,8 +135,8 @@ const PercentageDailyCharts = ({ dates }) => {
                   data: percentageBtc,
                 },
               ]}
-              width={500}
-              height={300}
+              width={1000}
+              height={500}
             />
           </div>
         </>
