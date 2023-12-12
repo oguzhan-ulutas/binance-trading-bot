@@ -1,3 +1,8 @@
 .balance-margin {
   margin-bottom: 40px;
 }
+
+.header-info {
+  display: flex;
+  justify-content: space-between;
+}

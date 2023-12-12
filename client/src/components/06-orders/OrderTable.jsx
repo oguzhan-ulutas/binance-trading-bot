@@ -160,8 +160,6 @@ const OrderTable = () => {
     fetchDataForAssets();
   }, [userAssets]);
 
-  console.log(rows);
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">

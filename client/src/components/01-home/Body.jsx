@@ -23,6 +23,7 @@ import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 
 import Balance from "../02-margin/Balance";
+import logo from "../../assets/logo.jpg";
 
 import { Outlet, Link } from "react-router-dom";
 
@@ -122,6 +123,9 @@ export default function Body() {
           >
             <MenuIcon />
           </IconButton>
+          <Link to="/" title="Home">
+            <img className="logo" src={logo} alt="" />
+          </Link>
           <Typography variant="h6" noWrap component="div">
             Binance Trading Bot
           </Typography>

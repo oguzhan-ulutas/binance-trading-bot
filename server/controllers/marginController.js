@@ -151,7 +151,7 @@ exports.getOrderByName = asyncHandler(async (req, res, next) => {
 const getAllOrders = async () => {
   let orders = [];
   await client
-    .marginAllOrders('SOLUSDT')
+    .marginAllOrders('AVAXUSDT')
     .then((response) => (orders = response.data))
     .catch((error) => client.logger.error(error));
 
@@ -161,7 +161,6 @@ const getAllOrders = async () => {
       await Order.findOneAndUpdate({ orderId: newOrder.orderId }, newOrder, {
         upsert: true, // If no document is found, create a new one
         new: true, // Return the updated document
-        runValidators: true, // Run validation on update
       });
     } catch (error) {
       console.error(error);

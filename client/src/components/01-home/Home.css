@@ -4,3 +4,12 @@
   justify-content: space-between;
   min-height: 94vh;
 }
+
+.logo {
+  width: 250;
+  /* height: 70px; */
+}
+
+#root > div > div > div > div > div {
+  margin-bottom: 38px;
+}
