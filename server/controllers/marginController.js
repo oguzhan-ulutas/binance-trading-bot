@@ -104,22 +104,31 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
     .then((response) => (orders = response.data))
     .catch((error) => client.logger.error(error));
 
-  orders.forEach(async (order) => {
-    const newOrder = new Order(order);
+  await Promise.all(
+    orders.map(async (order) => {
+      try {
+        const oldOrder = await Order.findOne({ clientOrderId: order.clientOrderId });
 
-    try {
-      const oldOrder = await Order.findOne({ clientOrderId: newOrder.clientOrderId });
-      if (oldOrder._id) {
-        // If document exist do nothing
-        return;
+        if (!oldOrder) {
+          const newOrder = new Order(order);
+          await newOrder.save();
+        }
+      } catch (error) {
+        console.error(error);
       }
-      oldOrder.save();
-    } catch (error) {
-      console.error(error);
-    }
-  });
+    }),
+  );
 
-  res.json(orders);
+  const updatedOrders = await Order.find(
+    { symbol: req.body.pair },
+    'symbol orderId price origQty executedQty status type side time cummulativeQuoteQty ',
+  )
+    .sort({
+      time: -1,
+    })
+    .exec();
+  console.log(updatedOrders);
+  res.json({ updatedOrders });
 });
 
 // Get order by name

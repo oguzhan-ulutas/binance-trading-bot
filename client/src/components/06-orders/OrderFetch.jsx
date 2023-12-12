@@ -6,9 +6,8 @@ import Button from "@mui/material/Button";
 import "./OrderFetch.css";
 import { BotContext } from "../BotContext";
 
-const OrderFetch = () => {
+const OrderFetch = ({ rows, setRows }) => {
   const [pair, setPair] = React.useState("BTCUSDT");
-  const [trade, setTrade] = React.useState([]);
   const { serverUrl } = React.useContext(BotContext);
 
   const handleSubmit = (e) => {
@@ -30,7 +29,13 @@ const OrderFetch = () => {
         return res.json();
       })
       .then((res) => {
-        setTrade(res);
+        const newRows = [...rows];
+        newRows.forEach((row) => {
+          if (pair.startsWith(row.name)) {
+            row.history = res.updatedOrders;
+            setRows([...newRows]);
+          }
+        });
       })
       .catch((err) => {
         console.log("Trade fetch error: ", err);

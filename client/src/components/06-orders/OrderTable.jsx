@@ -107,9 +107,8 @@ function Row(props) {
   );
 }
 
-const OrderTable = () => {
+const OrderTable = ({ rows, setRows }) => {
   const { userAssets, serverUrl } = React.useContext(BotContext);
-  const [rows, setRows] = React.useState([]);
 
   async function fetchAssetOrders(pair) {
     const url = `${serverUrl}/margin/orderbyname`;
@@ -149,7 +148,7 @@ const OrderTable = () => {
 
       try {
         const rowsArray = await Promise.all(promises);
-        console.log(rowsArray);
+
         rowsArray.sort((a, b) => a.name.localeCompare(b.name));
         setRows(rowsArray);
       } catch (error) {
