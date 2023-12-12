@@ -97,37 +97,29 @@ exports.getDailyBtcBalance = asyncHandler(async (req, res, next) => {
 
 // Get orders
 exports.getOrder = asyncHandler(async (req, res, next) => {
-  let trade = {};
-  // Get orderid of last trade
+  // Fetch order all orders
+  let orders = [];
   await client
-    .marginMyTrades(req.body.pair, { limit: 1 })
-    .then((res) => ([trade] = res.data))
+    .marginAllOrders(req.body.pair)
+    .then((response) => (orders = response.data))
     .catch((error) => client.logger.error(error));
 
-  const { orderId } = trade;
+  orders.forEach(async (order) => {
+    const newOrder = new Order(order);
 
-  // Fetch order of that id
-  let order = {};
-  await client
-    .marginOrder(req.body.pair, {
-      orderId,
-    })
-    .then((response) => (order = response.data))
-    .catch((error) => client.logger.error(error));
+    try {
+      const oldOrder = await Order.findOne({ clientOrderId: newOrder.clientOrderId });
+      if (oldOrder._id) {
+        // If document exist do nothing
+        return;
+      }
+      oldOrder.save();
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
-  const newOrder = new Order(order);
-
-  try {
-    await Order.findOneAndUpdate({ orderId: newOrder.orderId }, newOrder, {
-      upsert: true, // If no document is found, create a new one
-      new: true, // Return the updated document
-      runValidators: true, // Run validation on update
-    });
-  } catch (error) {
-    console.error(error);
-  }
-
-  res.json(newOrder);
+  res.json(orders);
 });
 
 // Get order by name
@@ -137,7 +129,7 @@ exports.getOrderByName = asyncHandler(async (req, res, next) => {
 
   const orders = await Order.find(
     { symbol: regex },
-    'symbol orderId price origQty executedQty status type side time ',
+    'symbol orderId price origQty executedQty status type side time cummulativeQuoteQty ',
   )
     .sort({
       time: -1,

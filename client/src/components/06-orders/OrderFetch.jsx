@@ -55,7 +55,7 @@ const OrderFetch = () => {
           onChange={(e) => setPair(e.target.value.toUpperCase())}
         />
         <Button variant="outlined" onClick={handleSubmit}>
-          Bring Last Trades
+          Refresh Orders
         </Button>
       </Box>
     </>
