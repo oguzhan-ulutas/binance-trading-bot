@@ -70,18 +70,6 @@ const headCells = [
     label: "Net Asset",
   },
   {
-    id: "free",
-    numeric: true,
-    disablePadding: false,
-    label: "Free",
-  },
-  {
-    id: "locked",
-    numeric: true,
-    disablePadding: false,
-    label: "Locked",
-  },
-  {
     id: "borrowed",
     numeric: true,
     disablePadding: false,
@@ -92,6 +80,19 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "Interest",
+  },
+
+  {
+    id: "free",
+    numeric: true,
+    disablePadding: false,
+    label: "Free",
+  },
+  {
+    id: "locked",
+    numeric: true,
+    disablePadding: false,
+    label: "Locked",
   },
 ];
 
@@ -339,10 +340,10 @@ export default function AssetsTable() {
                       {row.asset}
                     </TableCell>
                     <TableCell align="right">{row.netAsset}</TableCell>
-                    <TableCell align="right">{row.free}</TableCell>
-                    <TableCell align="right">{row.locked}</TableCell>
                     <TableCell align="right">{row.borrowed}</TableCell>
                     <TableCell align="right">{row.interest}</TableCell>
+                    <TableCell align="right">{row.free}</TableCell>
+                    <TableCell align="right">{row.locked}</TableCell>
                   </TableRow>
                 );
               })}
