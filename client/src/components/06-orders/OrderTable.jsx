@@ -149,7 +149,7 @@ const OrderTable = ({ rows, setRows }) => {
       try {
         const rowsArray = await Promise.all(promises);
 
-        rowsArray.sort((a, b) => a.name.localeCompare(b.name));
+        rowsArray.sort((a, b) => b.history.length - a.history.length);
         setRows(rowsArray);
       } catch (error) {
         console.error("Error fetching data:", error);
