@@ -44,7 +44,7 @@ const Balance = () => {
           </Box>
 
           <Box className="header-dept">
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h7" gutterBottom>
               Tolal Dept: <br />{" "}
               {parseFloat(
                 userMarginData.totalCollateralValueInUSDT -
@@ -56,7 +56,7 @@ const Balance = () => {
           </Box>
 
           <Box className="header-borrowed">
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h7" gutterBottom>
               Borrowed Assets: <br />{" "}
               {borrowed.length > 0
                 ? borrowed.map((asset) => {
