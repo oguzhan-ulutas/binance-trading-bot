@@ -7,6 +7,7 @@ import Order from "./03-order/Order";
 import BalanceHistoryGraph from "./04-balance-history/BalanceHistoryChart";
 import Projections from "./05-projections/Projections";
 import Trades from "./06-orders/Orders";
+import HomeOutlet from "./01-home/HomeOutlet";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -15,7 +16,7 @@ const Router = () => {
       element: <Home />,
       errorElement: <ErrorPage />,
       children: [
-        { index: true, element: <AssetsTable /> },
+        { index: true, element: <HomeOutlet /> },
         { path: "order", element: <Order /> },
         { path: "balance-history", element: <BalanceHistoryGraph /> },
         { path: "projections", element: <Projections /> },

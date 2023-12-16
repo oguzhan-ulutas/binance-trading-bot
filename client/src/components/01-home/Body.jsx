@@ -285,8 +285,13 @@ export default function Body() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+
         <Balance />
-        <Divider />
+
+        <Box my={5}>
+          <Divider />
+        </Box>
+
         <Outlet />
       </Box>
     </Box>

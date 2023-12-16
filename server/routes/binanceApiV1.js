@@ -23,4 +23,7 @@ router.post('/margin/get-order', marginController.getOrder);
 // Get order by name
 router.post('/margin/orderbyname', marginController.getOrderByName);
 
+// Get user assets usdt value
+router.post('/margin/user-assets-usdt', marginController.getUserAssetsUsdtValue);
+
 module.exports = router;

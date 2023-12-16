@@ -6,7 +6,7 @@ import Body from "./Body";
 import "./Home.css";
 
 const Home = () => {
-  const { serverUrl, userMarginData, setMarginUserData } =
+  const { serverUrl, userMarginData, setMarginUserData, assetsSymbolArray } =
     useContext(BotContext);
 
   useEffect(() => {
@@ -25,7 +25,39 @@ const Home = () => {
         console.log("User data fetch error in Home component: ", err);
       });
   }, []);
+
+  // Calculate user assets usdt value
+
+  useEffect(() => {
+    const url = `${serverUrl}/margin/user-assets-usdt`;
+
+    // Create an array of userAssets' symbol
+    console.log(assetsSymbolArray);
+
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ assetsSymbolArray }),
+    })
+      .then((res) => {
+        if (res.status >= 400) {
+          throw new Error("server error");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("Fetch error in Home", err);
+      });
+  }, [userMarginData]);
+
   console.log(userMarginData);
+
   return (
     <div className="home-container">
       <Body />

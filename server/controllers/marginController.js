@@ -149,6 +149,24 @@ exports.getOrderByName = asyncHandler(async (req, res, next) => {
   res.json({ orders });
 });
 
+// Get user assets usdt value
+exports.getUserAssetsUsdtValue = asyncHandler(async (req, res, next) => {
+  let prices = [];
+
+  // if req.body is empty return
+  if (!req.body.assetsSymbolArray.length) {
+    next();
+  }
+  await client
+    .tickerPrice('', req.body.assetsSymbolArray)
+    .then((response) => (prices = response.data));
+
+  console.log(prices);
+
+  res.json({ prices });
+});
+
+// For development purposes
 const getAllOrders = async () => {
   let orders = [];
   await client

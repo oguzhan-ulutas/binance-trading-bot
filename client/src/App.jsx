@@ -13,6 +13,13 @@ function App() {
     ? userMarginData.userAssets
     : [];
 
+  // Create an array of userAssets' symbol
+  const assetsSymbolArray = userMarginData.tradeEnabled
+    ? userAssets
+        .filter((item) => item.asset !== "USDT")
+        .map((item) => `${item.asset}USDT`)
+    : [];
+
   return (
     <BotContext.Provider
       value={{
@@ -20,6 +27,7 @@ function App() {
         userMarginData,
         setMarginUserData,
         userAssets,
+        assetsSymbolArray,
       }}
     >
       <Router />
