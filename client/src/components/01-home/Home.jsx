@@ -6,8 +6,13 @@ import Body from "./Body";
 import "./Home.css";
 
 const Home = () => {
-  const { serverUrl, userMarginData, setMarginUserData, assetsSymbolArray } =
-    useContext(BotContext);
+  const {
+    serverUrl,
+    userMarginData,
+    setMarginUserData,
+    assetsSymbolArray,
+    setCurrentAssetsPrices,
+  } = useContext(BotContext);
 
   useEffect(() => {
     const url = `${serverUrl}/margin/userData`;
@@ -31,9 +36,6 @@ const Home = () => {
   useEffect(() => {
     const url = `${serverUrl}/margin/user-assets-usdt`;
 
-    // Create an array of userAssets' symbol
-    console.log(assetsSymbolArray);
-
     fetch(url, {
       method: "POST",
       mode: "cors",
@@ -49,7 +51,7 @@ const Home = () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        setCurrentAssetsPrices(res.prices);
       })
       .catch((err) => {
         console.log("Fetch error in Home", err);

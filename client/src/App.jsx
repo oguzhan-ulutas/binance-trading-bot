@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 function App() {
   const serverUrl = import.meta.env.VITE_serverUrl;
   const [userMarginData, setMarginUserData] = useState({});
+  const [currentAssetsPrices, setCurrentAssetsPrices] = useState([]);
 
   // Set non-zero value assets as an array
   const userAssets = userMarginData.tradeEnabled
@@ -20,6 +21,8 @@ function App() {
         .map((item) => `${item.asset}USDT`)
     : [];
 
+  console.log(currentAssetsPrices);
+
   return (
     <BotContext.Provider
       value={{
@@ -28,6 +31,8 @@ function App() {
         setMarginUserData,
         userAssets,
         assetsSymbolArray,
+        currentAssetsPrices,
+        setCurrentAssetsPrices,
       }}
     >
       <Router />
