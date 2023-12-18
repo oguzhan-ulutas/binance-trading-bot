@@ -83,7 +83,10 @@ function Row(props) {
                         {historyRow.symbol}
                       </TableCell>
                       <TableCell>
-                        <TradeDetailDialog orderId={historyRow.orderId} />
+                        <TradeDetailDialog
+                          orderId={historyRow.orderId}
+                          symbol={historyRow.symbol}
+                        />
                       </TableCell>
                       <TableCell align="right">
                         {`${historyRow.time.slice(

@@ -11,12 +11,13 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
+import TradeDetailTable from "./TradeDetailTable";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TradeDetailDialog({ orderId }) {
+export default function TradeDetailDialog({ orderId, symbol }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -25,6 +26,30 @@ export default function TradeDetailDialog({ orderId }) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const fetchTrades = () => {
+    const url = `${serverUrl}/margin/trades`;
+    fetch(url, {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ orderId, symbol }),
+    })
+      .then((res) => {
+        if (res.status >= 400) {
+          throw new Error("Server error on trade detail dialog");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("Fetch error on trade detail dialog: ", err);
+      });
   };
 
   return (
@@ -53,6 +78,7 @@ export default function TradeDetailDialog({ orderId }) {
             </Typography>
           </Toolbar>
         </AppBar>
+        <TradeDetailTable orderId={orderId} symbol={symbol} />
       </Dialog>
     </React.Fragment>
   );
