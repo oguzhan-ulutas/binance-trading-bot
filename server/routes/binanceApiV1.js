@@ -26,4 +26,7 @@ router.post('/margin/orderbyname', marginController.getOrderByName);
 // Get user assets usdt value
 router.post('/margin/user-assets-usdt', marginController.getUserAssetsUsdtValue);
 
+// Get max borrowable usdt value
+router.get('/margin/max-borrowable-usdt', marginController.getMaxBorrowableUsdt);
+
 module.exports = router;

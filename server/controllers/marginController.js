@@ -166,6 +166,17 @@ exports.getUserAssetsUsdtValue = asyncHandler(async (req, res, next) => {
   res.json({ prices });
 });
 
+// Get max borrowable usdt value
+exports.getMaxBorrowableUsdt = asyncHandler(async (req, res, next) => {
+  let maxBorrowableUsdt = {};
+  await client
+    .marginMaxBorrowable('USDT')
+    .then((response) => (maxBorrowableUsdt = response.data))
+    .catch((error) => client.logger.error(error));
+
+  res.json(maxBorrowableUsdt);
+});
+
 // For development purposes
 const getAllOrders = async () => {
   let orders = [];

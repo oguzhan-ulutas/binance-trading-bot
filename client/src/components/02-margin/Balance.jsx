@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -7,7 +7,8 @@ import { BotContext } from "../BotContext";
 import "./Balance.css";
 
 const Balance = () => {
-  const { userMarginData } = useContext(BotContext);
+  const { userMarginData, serverUrl } = useContext(BotContext);
+  const [maxBorrowableUsdt, setMaxBorrowableUsdt] = useState({});
 
   // Display target
   const calculateTarget = () => {
@@ -37,7 +38,7 @@ const Balance = () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        setMaxBorrowableUsdt(res);
       })
       .catch((err) => {
         console.log("Fetch error in balance, max borrowable", err);
@@ -84,6 +85,15 @@ const Balance = () => {
                     }`;
                   })
                 : "No borrowed asset"}
+            </Typography>
+          </Box>
+
+          <Box className="header-borrowed">
+            <Typography variant="h7" gutterBottom>
+              Max Borrowable Usdt: <br /> Amount:{" "}
+              {parseFloat(maxBorrowableUsdt.amount).toFixed(2)}
+              <br /> Limit:{" "}
+              {parseFloat(maxBorrowableUsdt.borrowLimit).toFixed(2)}
             </Typography>
           </Box>
         </Box>
