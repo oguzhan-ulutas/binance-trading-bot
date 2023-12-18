@@ -6,13 +6,10 @@ import Body from "./Body";
 import "./Home.css";
 
 const Home = () => {
-  const {
-    serverUrl,
-    userMarginData,
-    setMarginUserData,
-    assetsSymbolArray,
-    setCurrentAssetsPrices,
-  } = useContext(BotContext);
+  const { serverUrl, userMarginData, setUserMarginData, assetsSymbolArray } =
+    useContext(BotContext);
+
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     const url = `${serverUrl}/margin/userData`;
@@ -24,7 +21,8 @@ const Home = () => {
         return res.json();
       })
       .then((res) => {
-        setMarginUserData(res);
+        setUserMarginData(res);
+        setRender(true);
       })
       .catch((err) => {
         console.log("User data fetch error in Home component: ", err);
@@ -50,13 +48,26 @@ const Home = () => {
         }
         return res.json();
       })
-      .then((res) => {
-        setCurrentAssetsPrices(res.prices);
+      .then(async (res) => {
+        const { prices } = res;
+        console.log(prices);
+        // Get copy of state
+        const data = { ...userMarginData };
+        await prices.map((asset) => {
+          data.userAssets.map((userAsset) => {
+            if (asset.symbol.startsWith(userAsset.asset)) {
+              userAsset.lastPrice = asset.price;
+              userAsset.lastUsdtValue =
+                parseFloat(userAsset.netAsset) * parseFloat(asset.price);
+            }
+          });
+        });
+        setUserMarginData(data);
       })
       .catch((err) => {
         console.log("Fetch error in Home", err);
       });
-  }, [userMarginData]);
+  }, [render]);
 
   console.log(userMarginData);
 
