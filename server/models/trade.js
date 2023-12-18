@@ -16,6 +16,8 @@ const TradeSchema = new Schema({
   isMaker: { type: Boolean },
   isBestMatch: { type: Boolean },
   isIsolated: { type: Boolean },
+  commissionAssetPrice: { type: String },
+  commissionUsdt: { type: String },
 });
 
 module.exports = mongoose.model('Trade', TradeSchema);

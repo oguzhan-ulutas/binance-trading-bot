@@ -111,7 +111,7 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 
         if (!oldOrder) {
           const newOrder = new Order(order);
-          console.log(newOrder);
+
           await newOrder.save();
 
           let trades = [];
@@ -124,6 +124,21 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
           // Save trades to app database
           await Promise.all(
             trades.map(async (trade) => {
+              // Get commission asset price
+              if (trade.commissionAsset === 'USDT') {
+                trade.commissionUsdt = trade.commission;
+                trade.commissionAssetPrice = '1';
+              } else {
+                let commissionAssetPrice = '';
+                await client
+                  .tickerPrice(`${trade.commissionAsset}USDT`)
+                  .then((response) => (commissionAssetPrice = response.data.price));
+
+                trade.commissionAssetPrice = commissionAssetPrice;
+                trade.commissionUsdt =
+                  parseFloat(commissionAssetPrice) * parseFloat(trade.commission);
+              }
+
               const newTrade = new Trade(trade);
               await newTrade.save();
             }),
