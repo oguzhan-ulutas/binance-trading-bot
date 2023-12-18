@@ -29,4 +29,7 @@ router.post('/margin/user-assets-usdt', marginController.getUserAssetsUsdtValue)
 // Get max borrowable usdt value
 router.get('/margin/max-borrowable-usdt', marginController.getMaxBorrowableUsdt);
 
+// Get trades of an orderId
+router.post('/margin/trades', marginController.getTrades);
+
 module.exports = router;

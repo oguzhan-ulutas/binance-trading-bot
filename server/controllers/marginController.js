@@ -111,7 +111,23 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 
         if (!oldOrder) {
           const newOrder = new Order(order);
+          console.log(newOrder);
           await newOrder.save();
+
+          let trades = [];
+          // Get trades from binance
+          await client
+            .marginMyTrades(`${newOrder.symbol}`, { orderId: `${newOrder.orderId}` })
+            .then((response) => (trades = response.data))
+            .catch((error) => client.logger.error(error));
+
+          // Save trades to app database
+          await Promise.all(
+            trades.map(async (trade) => {
+              const newTrade = new Trade(trade);
+              await newTrade.save();
+            }),
+          );
         }
       } catch (error) {
         console.error(error);
@@ -144,7 +160,6 @@ exports.getOrderByName = asyncHandler(async (req, res, next) => {
       time: -1,
     })
     .exec();
-  console.log(orders);
 
   res.json({ orders });
 });
@@ -161,8 +176,6 @@ exports.getUserAssetsUsdtValue = asyncHandler(async (req, res, next) => {
     .tickerPrice('', req.body.assetsSymbolArray)
     .then((response) => (prices = response.data));
 
-  console.log(prices);
-
   res.json({ prices });
 });
 
@@ -175,6 +188,20 @@ exports.getMaxBorrowableUsdt = asyncHandler(async (req, res, next) => {
     .catch((error) => client.logger.error(error));
 
   res.json(maxBorrowableUsdt);
+});
+
+// Get trades of an orderId
+exports.getTrades = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+
+  // Get trades from binance
+  const trades = await Trade.find({ symbol: req.body.symbol, orderId: req.body.orderId })
+    .sort({
+      time: -1,
+    })
+    .exec();
+
+  res.json({ trades });
 });
 
 // For development purposes

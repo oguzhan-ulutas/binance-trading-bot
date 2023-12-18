@@ -13,11 +13,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import TradeDetailTable from "./TradeDetailTable";
 
+import { BotContext } from "../BotContext";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function TradeDetailDialog({ orderId, symbol }) {
+  const { serverUrl } = React.useContext(BotContext);
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -54,7 +58,13 @@ export default function TradeDetailDialog({ orderId, symbol }) {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          handleClickOpen();
+          fetchTrades();
+        }}
+      >
         {orderId}
       </Button>
       <Dialog
