@@ -24,6 +24,8 @@ export default function TradeDetailDialog({ orderId, symbol }) {
 
   const [open, setOpen] = React.useState(false);
 
+  const [trades, setTrades] = React.useState([]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -49,7 +51,7 @@ export default function TradeDetailDialog({ orderId, symbol }) {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        setTrades(res.trades);
       })
       .catch((err) => {
         console.log("Fetch error on trade detail dialog: ", err);
@@ -88,7 +90,7 @@ export default function TradeDetailDialog({ orderId, symbol }) {
             </Typography>
           </Toolbar>
         </AppBar>
-        <TradeDetailTable orderId={orderId} symbol={symbol} />
+        <TradeDetailTable trades={trades} />
       </Dialog>
     </React.Fragment>
   );

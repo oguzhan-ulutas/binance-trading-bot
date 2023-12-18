@@ -158,7 +158,6 @@ const OrderTable = ({ rows, setRows }) => {
 
         rowsArray.sort((a, b) => b.history.length - a.history.length);
         setRows(rowsArray);
-        console.log(rows);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

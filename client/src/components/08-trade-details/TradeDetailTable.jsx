@@ -7,46 +7,79 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(
+  symbol,
+  qty,
+  price,
+  quoteQty,
+  time,
+  commissionAsset,
+  commission,
+  commissionUsdt
+) {
+  return {
+    symbol,
+    qty,
+    price,
+    quoteQty,
+    time,
+    commissionAsset,
+    commission,
+    commissionUsdt,
+  };
 }
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+const rows = [];
 
-export default function TradeDetailTable({ orderId, symbol }) {
-  console.log(orderId, symbol);
+export default function TradeDetailTable({ trades }) {
+  console.log(trades);
+
+  trades.map((trade) => {
+    const row = createData(
+      trade.symbol,
+      trade.qty,
+      trade.price,
+      trade.quoteQty,
+      `${trade.time.slice(0, 10)} / ${trade.time.slice(11, 19)}`,
+      trade.commissionAsset,
+      trade.commission,
+      trade.commissionUsdt
+    );
+    rows.push(row);
+    console.log(row);
+  });
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>Asset</TableCell>
+            <TableCell align="right">Qty</TableCell>
+            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Total Usdt Value</TableCell>
+            <TableCell align="right">Time</TableCell>
+            <TableCell align="right">Commission Asset</TableCell>
+            <TableCell align="right">Commission</TableCell>
+            <TableCell align="right">Commission Usdt</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow
-              key={row.name}
+              key={row._id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.symbol}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              <TableCell align="right">{row.qty}</TableCell>
+              <TableCell align="right">{row.price}</TableCell>
+              <TableCell align="right">{row.quoteQty}</TableCell>
+              <TableCell align="right">{row.time}</TableCell>
+              <TableCell align="right">{row.commissionAsset}</TableCell>
+              <TableCell align="right">{row.commission}</TableCell>
+              <TableCell align="right">{row.commissionUsdt}</TableCell>
             </TableRow>
           ))}
         </TableBody>
