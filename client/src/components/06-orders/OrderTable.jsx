@@ -16,6 +16,8 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import { BotContext } from "../BotContext";
 
+import TradeDetailDialog from "../08-trade-details/TradeDetailDialog";
+
 function createData(name, borrowed, free, interest, locked, netAsset, history) {
   return {
     name,
@@ -80,7 +82,9 @@ function Row(props) {
                       <TableCell component="th" scope="row">
                         {historyRow.symbol}
                       </TableCell>
-                      <TableCell>{historyRow.orderId}</TableCell>
+                      <TableCell>
+                        <TradeDetailDialog orderId={historyRow.orderId} />
+                      </TableCell>
                       <TableCell align="right">
                         {`${historyRow.time.slice(
                           0,
@@ -111,7 +115,7 @@ const OrderTable = ({ rows, setRows }) => {
   const { userAssets, serverUrl } = React.useContext(BotContext);
 
   async function fetchAssetOrders(pair) {
-    const url = `${serverUrl}/margin/orderbyname`;
+    const url = `${serverUrl}/margin/order-by-name`;
 
     const result = await fetch(url, {
       method: "POST",
@@ -151,6 +155,7 @@ const OrderTable = ({ rows, setRows }) => {
 
         rowsArray.sort((a, b) => b.history.length - a.history.length);
         setRows(rowsArray);
+        console.log(rows);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -21,7 +21,7 @@ router.get('/margin/daily-btc', marginController.getDailyBtcBalance);
 router.post('/margin/get-order', marginController.getOrder);
 
 // Get order by name
-router.post('/margin/orderbyname', marginController.getOrderByName);
+router.post('/margin/order-by-name', marginController.getOrderByName);
 
 // Get user assets usdt value
 router.post('/margin/user-assets-usdt', marginController.getUserAssetsUsdtValue);
