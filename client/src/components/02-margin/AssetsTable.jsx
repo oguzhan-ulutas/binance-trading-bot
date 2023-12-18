@@ -70,6 +70,18 @@ const headCells = [
     label: "Net Asset",
   },
   {
+    id: "lastPrice",
+    numeric: true,
+    disablePadding: false,
+    label: "Last Unit Price",
+  },
+  {
+    id: "lastUsdtValue",
+    numeric: true,
+    disablePadding: false,
+    label: "Total Usdt Value",
+  },
+  {
     id: "borrowed",
     numeric: true,
     disablePadding: false,
@@ -340,6 +352,12 @@ export default function AssetsTable() {
                       {row.asset}
                     </TableCell>
                     <TableCell align="right">{row.netAsset}</TableCell>
+                    <TableCell align="right">
+                      {parseFloat(row.lastPrice).toFixed(2)}
+                    </TableCell>
+                    <TableCell align="right">
+                      {parseFloat(row.lastUsdtValue).toFixed(2)}
+                    </TableCell>
                     <TableCell align="right">{row.borrowed}</TableCell>
                     <TableCell align="right">{row.interest}</TableCell>
                     <TableCell align="right">{row.free}</TableCell>

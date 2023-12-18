@@ -20,8 +20,6 @@ function App() {
         .map((item) => `${item.asset}USDT`)
     : [];
 
-  console.log(currentAssetsPrices);
-
   return (
     <BotContext.Provider
       value={{

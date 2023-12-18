@@ -50,7 +50,7 @@ const Home = () => {
       })
       .then(async (res) => {
         const { prices } = res;
-        console.log(prices);
+
         // Get copy of state
         const data = { ...userMarginData };
         await prices.map((asset) => {
@@ -62,6 +62,14 @@ const Home = () => {
             }
           });
         });
+
+        await data.userAssets.map((asset) => {
+          if (asset.asset === "USDT") {
+            asset.lastPrice = 1;
+            asset.lastUsdtValue = asset.netAsset;
+          }
+        });
+
         setUserMarginData(data);
       })
       .catch((err) => {

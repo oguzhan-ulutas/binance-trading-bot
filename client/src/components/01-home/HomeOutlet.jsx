@@ -8,11 +8,15 @@ const HomeOutlet = () => {
     <>
       <AssetsTable />
 
-      <Box my={5}>
+      <Box my={15}>
         <Divider />
       </Box>
 
       <PieChartAssets />
+
+      <Box my={15}>
+        <Divider />
+      </Box>
     </>
   );
 };
