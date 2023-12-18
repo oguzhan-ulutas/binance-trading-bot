@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -24,6 +24,25 @@ const Balance = () => {
   const borrowed = userMarginData.borrowEnabled
     ? userMarginData.userAssets.filter((asset) => asset.borrowed !== "0")
     : [];
+
+  // Get max borrowable usdt
+  useEffect(() => {
+    const url = `${serverUrl}/margin/max-borrowable-usdt`;
+
+    fetch(url, { mode: "cors" })
+      .then((res) => {
+        if (res.status >= 400) {
+          throw new Error("server error");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("Fetch error in balance, max borrowable", err);
+      });
+  }, []);
 
   return (
     <div className="balance-margin">
