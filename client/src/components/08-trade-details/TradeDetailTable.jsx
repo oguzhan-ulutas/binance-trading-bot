@@ -15,7 +15,8 @@ function createData(
   time,
   commissionAsset,
   commission,
-  commissionUsdt
+  commissionUsdt,
+  id
 ) {
   return {
     symbol,
@@ -26,28 +27,29 @@ function createData(
     commissionAsset,
     commission,
     commissionUsdt,
+    id,
   };
 }
 
 const rows = [];
 
 export default function TradeDetailTable({ trades }) {
-  console.log(trades);
-
-  trades.map((trade) => {
-    const row = createData(
-      trade.symbol,
-      trade.qty,
-      trade.price,
-      trade.quoteQty,
-      `${trade.time.slice(0, 10)} / ${trade.time.slice(11, 19)}`,
-      trade.commissionAsset,
-      trade.commission,
-      trade.commissionUsdt
-    );
-    rows.push(row);
-    console.log(row);
-  });
+  !rows.length
+    ? trades.map((trade) => {
+        const row = createData(
+          trade.symbol,
+          trade.qty,
+          trade.price,
+          trade.quoteQty,
+          `${trade.time.slice(0, 10)} / ${trade.time.slice(11, 19)}`,
+          trade.commissionAsset,
+          trade.commission,
+          trade.commissionUsdt,
+          trade._id
+        );
+        rows.push(row);
+      })
+    : null;
 
   return (
     <TableContainer component={Paper}>
@@ -67,7 +69,7 @@ export default function TradeDetailTable({ trades }) {
         <TableBody>
           {rows.map((row) => (
             <TableRow
-              key={row._id}
+              key={row.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">

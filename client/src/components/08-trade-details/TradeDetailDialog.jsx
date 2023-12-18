@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import TradeDetailTable from "./TradeDetailTable";
+import TradeSummary from "./TradeSummary";
 
 import { BotContext } from "../BotContext";
 
@@ -90,6 +91,7 @@ export default function TradeDetailDialog({ orderId, symbol }) {
             </Typography>
           </Toolbar>
         </AppBar>
+        <TradeSummary trades={trades} />
         <TradeDetailTable trades={trades} />
       </Dialog>
     </React.Fragment>
