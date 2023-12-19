@@ -16,8 +16,6 @@ Create .env file in server directory:
 
 Also create .env file inside the client directory:
 
-- VITE_binanceApiKey = "YOUR_BINANCE_PUBLIC_KEY"
-- VITE_binanceApiSecretKey = "YOUR_BINANCE_SECRET_KEY"
 - VITE_serverUrl = "http://localhost:3000/binance-api/v1" If your server url different, make changes accordingly.
 
 ### Step 2: Dependency Installation

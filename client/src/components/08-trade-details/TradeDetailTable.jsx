@@ -81,7 +81,9 @@ export default function TradeDetailTable({ trades }) {
               <TableCell align="right">{row.time}</TableCell>
               <TableCell align="right">{row.commissionAsset}</TableCell>
               <TableCell align="right">{row.commission}</TableCell>
-              <TableCell align="right">{row.commissionUsdt}</TableCell>
+              <TableCell align="right">
+                {parseFloat(row.commissionUsdt).toFixed(4)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
