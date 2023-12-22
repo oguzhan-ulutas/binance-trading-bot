@@ -11,7 +11,7 @@ const Home = () => {
 
   const [render, setRender] = useState(false);
 
-  useEffect(() => {
+  const fetchUserData = () => {
     const url = `${serverUrl}/margin/userData`;
     fetch(url, { mode: "cors" })
       .then((res) => {
@@ -27,6 +27,10 @@ const Home = () => {
       .catch((err) => {
         console.log("User data fetch error in Home component: ", err);
       });
+  };
+
+  useEffect(() => {
+    fetchUserData();
   }, []);
 
   // Calculate user assets usdt value
@@ -81,7 +85,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <Body />
+      <Body fetchUserData={fetchUserData} />
       <Footer />
     </div>
   );

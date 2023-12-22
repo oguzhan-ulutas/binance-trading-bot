@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { BotContext } from "../BotContext";
 import "./Balance.css";
 
-const Balance = () => {
+const Balance = ({ fetchUserData }) => {
   const { userMarginData, serverUrl } = useContext(BotContext);
   const [maxBorrowableUsdt, setMaxBorrowableUsdt] = useState({});
 
@@ -66,6 +66,9 @@ const Balance = () => {
               {parseFloat(userMarginData.netBalance).toFixed(2)} USDT, <br />
               {userMarginData.totalNetAssetOfBtc} BTC <br />
             </Typography>
+            <Button variant="outlined" onClick={fetchUserData}>
+              Refresh
+            </Button>
           </Box>
 
           <Box className="header-dept">

@@ -94,7 +94,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function Body() {
+export default function Body({ fetchUserData }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -286,7 +286,7 @@ export default function Body() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
 
-        <Balance />
+        <Balance fetchUserData={fetchUserData} />
 
         <Box my={5}>
           <Divider />
