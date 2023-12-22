@@ -9,7 +9,7 @@ const Home = () => {
   const { serverUrl, userMarginData, setUserMarginData, assetsSymbolArray } =
     useContext(BotContext);
 
-  const [render, setRender] = useState(false);
+  const [render, setRender] = useState(0);
 
   const fetchUserData = () => {
     const url = `${serverUrl}/margin/userData`;
@@ -22,7 +22,7 @@ const Home = () => {
       })
       .then((res) => {
         setUserMarginData(res);
-        setRender(true);
+        setRender(render + 1);
       })
       .catch((err) => {
         console.log("User data fetch error in Home component: ", err);
