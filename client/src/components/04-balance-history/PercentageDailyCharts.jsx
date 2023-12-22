@@ -85,7 +85,7 @@ const PercentageDailyCharts = ({ dates }) => {
       {percentageUsdt.length > 0 && percentageBtc.length > 0 ? (
         <>
           <div className="balance-chart-usdt">
-            <h2>Daily Change USDT(%)</h2>
+            <h2>Daily Change (%)</h2>
 
             <LineChart
               xAxis={[
@@ -104,41 +104,26 @@ const PercentageDailyCharts = ({ dates }) => {
               series={[
                 {
                   data: percentageUsdt,
+                  label: "USDT",
+                  yAxisKey: "leftAxisId",
+                  color: "#85BB65",
+                },
+                {
+                  data: percentageBtc,
+                  label: "BTC",
+                  yAxisKey: "rightAxisId",
+                  color: "#FF9900",
                 },
               ]}
               width={1000}
               height={500}
+              yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
+              rightAxis="rightAxisId"
             />
           </div>
           <Box my={5}>
             <Divider />
           </Box>
-
-          <div className="balance-chart-usdt">
-            <h2>Daily Change BTC(%)</h2>
-            <LineChart
-              xAxis={[
-                {
-                  data: dates,
-                  scaleType: "time",
-                  valueFormatter,
-                  tickLabelInterval: (time) => time.getHours() === 0,
-                  tickLabelStyle: {
-                    angle: 310,
-                    textAnchor: "end",
-                    fontSize: 10,
-                  },
-                },
-              ]}
-              series={[
-                {
-                  data: percentageBtc,
-                },
-              ]}
-              width={1000}
-              height={500}
-            />
-          </div>
         </>
       ) : null}
     </>
