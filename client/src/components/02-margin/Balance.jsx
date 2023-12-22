@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 import { BotContext } from "../BotContext";
 import "./Balance.css";
@@ -26,8 +27,7 @@ const Balance = () => {
     ? userMarginData.userAssets.filter((asset) => asset.borrowed !== "0")
     : [];
 
-  // Get max borrowable usdt
-  useEffect(() => {
+  const FetchMaxBorrowAble = () => {
     const url = `${serverUrl}/margin/max-borrowable-usdt`;
 
     fetch(url, { mode: "cors" })
@@ -43,6 +43,11 @@ const Balance = () => {
       .catch((err) => {
         console.log("Fetch error in balance, max borrowable", err);
       });
+  };
+
+  // Get max borrowable usdt
+  useEffect(() => {
+    FetchMaxBorrowAble();
   }, []);
 
   return (
@@ -95,6 +100,9 @@ const Balance = () => {
               <br /> Limit:{" "}
               {parseFloat(maxBorrowableUsdt.borrowLimit).toFixed(2)}
             </Typography>
+            <Button variant="outlined" onClick={FetchMaxBorrowAble}>
+              Refresh
+            </Button>
           </Box>
         </Box>
       ) : null}

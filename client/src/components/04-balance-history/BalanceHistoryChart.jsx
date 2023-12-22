@@ -37,10 +37,12 @@ export default function BalanceHistoryChart() {
   });
 
   const balancesUsdt = balances.map((item) => {
-    return Number(item.netBalance);
+    return parseFloat(item.netBalance);
   });
 
-  const balancesBtc = balances.map((item) => Number(item.totalNetAssetOfBtc));
+  const balancesBtc = balances.map((item) =>
+    parseFloat(item.totalNetAssetOfBtc)
+  );
 
   const valueFormatter = (date) =>
     date.toLocaleDateString("fr-FR", {

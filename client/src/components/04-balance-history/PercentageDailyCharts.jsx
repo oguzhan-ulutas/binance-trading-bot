@@ -29,7 +29,7 @@ const PercentageDailyCharts = ({ dates }) => {
       });
   }, []);
 
-  // Fetch usdt balance
+  // Fetch btc balance
   React.useEffect(() => {
     const url = `${serverUrl}/margin/daily-btc`;
 
@@ -59,7 +59,7 @@ const PercentageDailyCharts = ({ dates }) => {
   const dataBtc = balanceBtc.map((item) => item.totalNetAssetOfBtc);
 
   function calculateDailyPercentageChange(balances) {
-    const percentageChanges = ["0"];
+    const percentageChanges = [0];
 
     for (let i = 1; i < balances.length; i++) {
       const currentBalance = parseFloat(balances[i]);
