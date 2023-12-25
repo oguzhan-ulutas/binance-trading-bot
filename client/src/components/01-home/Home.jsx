@@ -74,18 +74,6 @@ const Home = () => {
           }
         });
 
-        // Extract borrowed coins from netBalance
-        const borrowedAssets = await userMarginData.userAssets.filter(
-          (asset) => asset.borrowed !== "0"
-        );
-
-        const borrowedUsdtValue = await borrowedAssets.reduce((acc, asset) => {
-          return acc + asset.lastUsdtValue;
-        }, 0);
-        console.log(borrowedUsdtValue);
-        data.netBalance =
-          parseFloat(data.netBalance) + parseFloat(borrowedUsdtValue);
-
         setUserMarginData(data);
       })
       .catch((err) => {

@@ -28,11 +28,33 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
     userAssets: userMarginData.userAssets.filter((asset) => asset.netAsset != '0'),
   };
 
+  // Get last price of assets
+  await Promise.all(
+    userMarginData.userAssets.map(async (asset) => {
+      if (asset.asset !== 'USDT') {
+        await client.tickerPrice(`${asset.asset}USDT`).then((res) => {
+          asset.lastUsdtValue = res.data.price;
+        });
+      }
+    }),
+  );
+
   // Extract borrowed usdt from total balance
   const usdt = userMarginData.userAssets.filter((asset) => asset.asset === 'USDT');
   const netBalance =
     parseFloat(userMarginData.totalCollateralValueInUSDT) - parseFloat(usdt[0].borrowed);
   userMarginData.netBalance = `${netBalance}`;
+
+  // Extract borrowed coins from netBalance
+  const borrowedAssets = await userMarginData.userAssets.filter((asset) => asset.borrowed !== '0');
+  console.log(borrowedAssets);
+
+  const borrowedUsdtValue = await borrowedAssets.reduce(
+    (acc, asset) => acc + parseFloat(asset.lastUsdtValue) * parseFloat(asset.borrowed),
+    0,
+  );
+
+  userMarginData.netBalance = parseFloat(userMarginData.netBalance) - parseFloat(borrowedUsdtValue);
 
   // Find all todays registration and delete them all
   const today = new Date();
