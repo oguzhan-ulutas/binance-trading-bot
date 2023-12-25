@@ -8,6 +8,7 @@ import BalanceHistoryGraph from "./04-balance-history/BalanceHistoryChart";
 import Projections from "./05-projections/Projections";
 import Trades from "./06-orders/Orders";
 import HomeOutlet from "./01-home/HomeOutlet";
+import StrategyOne from "./09-strategy-one/StrategyOne";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -21,6 +22,7 @@ const Router = () => {
         { path: "balance-history", element: <BalanceHistoryGraph /> },
         { path: "projections", element: <Projections /> },
         { path: "orders", element: <Trades /> },
+        { path: "strategy-one", element: <StrategyOne /> },
       ],
     },
   ]);

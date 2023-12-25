@@ -21,6 +21,7 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import StraightIcon from "@mui/icons-material/Straight";
 
 import Balance from "../02-margin/Balance";
 import logo from "../../assets/logo.jpg";
@@ -191,6 +192,33 @@ export default function Body({ fetchUserData }) {
                 </ListItemIcon>
                 <ListItemText
                   primary={"Order Calculations"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+
+          {/* STRATEGY-1*/}
+          <Link to="/strategy-one">
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <StraightIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Strategy-1"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
