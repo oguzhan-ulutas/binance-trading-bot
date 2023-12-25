@@ -353,7 +353,7 @@ export default function AssetsTable() {
                     </TableCell>
                     <TableCell align="right">{row.netAsset}</TableCell>
                     <TableCell align="right">
-                      {parseFloat(row.lastPrice).toFixed(2)}
+                      {parseFloat(row.lastUsdtUnitValue).toFixed(2)}
                     </TableCell>
                     <TableCell align="right">
                       {parseFloat(row.lastUsdtValue).toFixed(2)}

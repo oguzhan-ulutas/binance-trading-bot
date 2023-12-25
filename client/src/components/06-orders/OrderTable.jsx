@@ -18,9 +18,21 @@ import { BotContext } from "../BotContext";
 
 import TradeDetailDialog from "../08-trade-details/TradeDetailDialog";
 
-function createData(name, borrowed, free, interest, locked, netAsset, history) {
+function createData(
+  name,
+  lastUsdtUnitValue,
+  lastUsdtValue,
+  borrowed,
+  free,
+  interest,
+  locked,
+  netAsset,
+  history
+) {
   return {
     name,
+    lastUsdtUnitValue,
+    lastUsdtValue,
     borrowed,
     free,
     interest,
@@ -48,6 +60,12 @@ function Row(props) {
         </TableCell>
         <TableCell component="th" scope="row">
           {`${row.name} (${row.history.length})`}
+        </TableCell>
+        <TableCell align="right">
+          {parseFloat(row.lastUsdtUnitValue).toFixed(2)}
+        </TableCell>
+        <TableCell align="right">
+          {parseFloat(row.lastUsdtValue).toFixed(2)}
         </TableCell>
         <TableCell align="right">{row.borrowed}</TableCell>
         <TableCell align="right">{row.free}</TableCell>
@@ -144,6 +162,8 @@ const OrderTable = ({ rows, setRows }) => {
 
         return createData(
           asset.asset,
+          asset.lastUsdtUnitValue,
+          asset.lastUsdtValue,
           asset.borrowed,
           asset.free,
           asset.interest,
@@ -173,6 +193,8 @@ const OrderTable = ({ rows, setRows }) => {
           <TableRow>
             <TableCell />
             <TableCell>Asset</TableCell>
+            <TableCell align="right">Last Unit Price</TableCell>
+            <TableCell align="right">Total Usdt Value</TableCell>
             <TableCell align="right">Borrowed</TableCell>
             <TableCell align="right">Free</TableCell>
             <TableCell align="right">Interest</TableCell>
