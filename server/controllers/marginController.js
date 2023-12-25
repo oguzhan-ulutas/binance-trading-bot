@@ -33,8 +33,12 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
     userMarginData.userAssets.map(async (asset) => {
       if (asset.asset !== 'USDT') {
         await client.tickerPrice(`${asset.asset}USDT`).then((res) => {
-          asset.lastUsdtValue = res.data.price;
+          asset.lastUsdtUnitValue = res.data.price;
+          asset.lastUsdtValue = parseFloat(asset.netAsset) * parseFloat(asset.lastUsdtUnitValue);
         });
+      } else {
+        asset.lastUsdtUnitValue = 1;
+        asset.lastUsdtValue = parseFloat(asset.netAsset);
       }
     }),
   );
@@ -50,7 +54,7 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
   console.log(borrowedAssets);
 
   const borrowedUsdtValue = await borrowedAssets.reduce(
-    (acc, asset) => acc + parseFloat(asset.lastUsdtValue) * parseFloat(asset.borrowed),
+    (acc, asset) => acc + parseFloat(asset.lastUsdtUnitValue) * parseFloat(asset.borrowed),
     0,
   );
 

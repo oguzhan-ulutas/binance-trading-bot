@@ -9,8 +9,6 @@ const Home = () => {
   const { serverUrl, userMarginData, setUserMarginData, assetsSymbolArray } =
     useContext(BotContext);
 
-  const [render, setRender] = useState(0);
-
   const fetchUserData = () => {
     const url = `${serverUrl}/margin/userData`;
     fetch(url, { mode: "cors" })
@@ -22,7 +20,6 @@ const Home = () => {
       })
       .then((res) => {
         setUserMarginData(res);
-        setRender(render + 1);
       })
       .catch((err) => {
         console.log("User data fetch error in Home component: ", err);
@@ -32,54 +29,6 @@ const Home = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
-
-  // Calculate user assets usdt value
-
-  useEffect(() => {
-    const url = `${serverUrl}/margin/user-assets-usdt`;
-
-    fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ assetsSymbolArray }),
-    })
-      .then((res) => {
-        if (res.status >= 400) {
-          throw new Error("server error");
-        }
-        return res.json();
-      })
-      .then(async (res) => {
-        const { prices } = res;
-
-        // Get copy of state
-        const data = { ...userMarginData };
-        await prices.map((asset) => {
-          data.userAssets.map((userAsset) => {
-            if (asset.symbol.startsWith(userAsset.asset)) {
-              userAsset.lastPrice = asset.price;
-              userAsset.lastUsdtValue =
-                parseFloat(userAsset.netAsset) * parseFloat(asset.price);
-            }
-          });
-        });
-
-        await data.userAssets.map((asset) => {
-          if (asset.asset === "USDT") {
-            asset.lastPrice = 1;
-            asset.lastUsdtValue = asset.netAsset;
-          }
-        });
-
-        setUserMarginData(data);
-      })
-      .catch((err) => {
-        console.log("Fetch error in Home", err);
-      });
-  }, [render]);
 
   console.log(userMarginData);
 
