@@ -6,7 +6,7 @@ import Body from "./Body";
 import "./Home.css";
 
 const Home = () => {
-  const { serverUrl, userMarginData, setUserMarginData, assetsSymbolArray } =
+  const { serverUrl, userMarginData, setUserMarginData } =
     useContext(BotContext);
 
   const fetchUserData = () => {

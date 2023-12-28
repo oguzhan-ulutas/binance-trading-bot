@@ -3,8 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 const marginController = require('../controllers/marginController');
+const strategyOneController = require('../controllers/strategyOneController');
 
-// Margin Routes
+// MARGIN ROUTES
 // Get margin user data
 router.get('/margin/userData', marginController.getUserData);
 
@@ -31,5 +32,9 @@ router.get('/margin/max-borrowable-usdt', marginController.getMaxBorrowableUsdt)
 
 // Get trades of an orderId
 router.post('/margin/trades', marginController.getTrades);
+
+// STRATEGY ONE ROUTES
+// Get asset price
+router.post('/margin/strategy-one/get-asset-value', strategyOneController.getAssetValue);
 
 module.exports = router;

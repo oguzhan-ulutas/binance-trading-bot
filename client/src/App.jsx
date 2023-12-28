@@ -2,7 +2,7 @@ import Router from "./components/Router.jsx";
 import { BotContext } from "./components/BotContext.jsx";
 
 import "./App.css";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 function App() {
   const serverUrl = import.meta.env.VITE_serverUrl;
