@@ -8,48 +8,57 @@ import { useContext, useEffect, useState } from "react";
 import { StrategyOneContext } from "./StrategyOneContext";
 
 const GetAssetValue = () => {
-  const { serverUrl, assetValue, setAssetValue, asset, setAsset } =
-    useContext(StrategyOneContext);
+  const {
+    serverUrl,
+    assetValue,
+    setAssetValue,
+    asset,
+    setAsset,
+    assetArray,
+    setAssetArray,
+  } = useContext(StrategyOneContext);
 
   const [isFetching, setIsFetching] = useState(false);
 
   // Get asset value each second
 
-  const fetchAssetValue = () => {
+  const fetchAssetValue = async () => {
     const url = `${serverUrl}/margin/strategy-one/get-asset-value`;
-    console.log(url);
 
-    fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ asset }),
-    })
-      .then((res) => {
-        if (res.status >= 400) {
-          throw new Error("server error");
-        }
-        return res.json();
-      })
-      .then((res) => {
-        setAssetValue(parseFloat(res.price).toFixed(2));
-      })
-      .catch((err) => {
-        console.log("Error in getAssetValue component: ", err);
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ asset }),
       });
+      const result = await response.json();
+      await setAssetValue(parseFloat(result.price).toFixed(2));
+      console.log(assetValue);
+    } catch (error) {
+      console.error("Error fetching data in GetAssetValue:", error);
+    }
   };
 
   useEffect(() => {
     if (isFetching) {
       // Start fetching data if isFetching is true
-      const intervalId = setInterval(fetchAssetValue, 1000);
+      const intervalId = setInterval(() => {
+        fetchAssetValue();
+      }, 1000);
 
       // Clean up the interval on component unmount
       return () => clearInterval(intervalId);
     }
   }, [isFetching]);
+
+  useEffect(() => {
+    setAssetArray([...assetArray, assetValue]);
+    console.log(assetArray);
+  }, [assetValue]);
+
   return (
     <Box className="header-strategy">
       <TextField
