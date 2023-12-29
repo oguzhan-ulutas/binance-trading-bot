@@ -3,9 +3,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 import { StrategyOneContext } from "./StrategyOneContext";
+import "./GetAssetValue.css";
 
 const GetAssetValue = () => {
   const {
@@ -16,9 +17,9 @@ const GetAssetValue = () => {
     setAsset,
     assetArray,
     setAssetArray,
+    isFetching,
+    setIsFetching,
   } = useContext(StrategyOneContext);
-
-  const [isFetching, setIsFetching] = useState(false);
 
   // Get asset value each second
 
@@ -55,31 +56,36 @@ const GetAssetValue = () => {
   }, [isFetching]);
 
   useEffect(() => {
-    setAssetArray([...assetArray, assetValue]);
+    setAssetArray([...assetArray, parseFloat(assetValue)]);
     console.log(assetArray);
   }, [assetValue]);
 
   return (
-    <Box className="header-strategy">
-      <TextField
-        id="standard-basic"
-        label="Pair"
-        variant="standard"
-        placeholder="BTCUSDT"
-        defaultValue={"BTCUSDT"}
-        onChange={(e) => setAsset(e.target.value.toUpperCase())}
-      />
-      <Button
-        variant="outlined"
-        onClick={() =>
-          isFetching ? setIsFetching(false) : setIsFetching(true)
-        }
-      >
-        {isFetching ? "Stop" : "Start"}
-      </Button>
-      <Typography variant="h6" gutterBottom>
-        Current Price: {assetValue}
-      </Typography>{" "}
+    <Box className="startegy-one">
+      <Box className="header-strategy-one">
+        <TextField
+          id="standard-basic"
+          label="Pair"
+          variant="standard"
+          placeholder="BTCUSDT"
+          defaultValue={"BTCUSDT"}
+          onChange={(e) => {
+            setAsset(e.target.value.toUpperCase());
+            setAssetArray([]);
+          }}
+        />
+        <Button
+          variant="outlined"
+          onClick={() =>
+            isFetching ? setIsFetching(false) : setIsFetching(true)
+          }
+        >
+          {isFetching ? "Stop" : "Start"}
+        </Button>
+        <Typography variant="h6" gutterBottom>
+          Current Price: {assetValue}
+        </Typography>{" "}
+      </Box>
     </Box>
   );
 };
