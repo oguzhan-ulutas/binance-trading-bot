@@ -3,10 +3,11 @@
 // - The user will decide the trade direction(buy or sell)
 // 1 - Fetch asset data each second and add price to an array.
 // 2 - Open order, save order
-// 3 - Set a trailing stop order below or above to 0.5% of entry price
-// 4 - Get open orders, if stopped stop
-// 5 - if price reaches %0,5 of entry price, cancel stop order and take profit
-// 6 - Open new order and repeat
+// 3 - Set a stop order below or above to 0.5% of entry price
+// 4 - Get open orders, if stopped do nothing
+// 5 - If price reaches 0,5% of the entry point close stop order
+// 6 - Open a sell order and take profit
+// 7 - Open new order and repeat
 
 import Divider from "@mui/material/Divider";
 
