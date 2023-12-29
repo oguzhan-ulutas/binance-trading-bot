@@ -9,6 +9,7 @@ import { StrategyOneContext } from "./StrategyOneContext";
 import "./PlaceOrder.css";
 import OrderSide from "./OrderSide";
 import OrderType from "./OrderType";
+import OrderQuantity from "./OrderQuantity";
 
 const PlaceOrder = () => {
   const { serverUrl, assetValue, asset, assetArray, isFetching } =
@@ -19,6 +20,7 @@ const PlaceOrder = () => {
     <Box className="place-order">
       <OrderSide />
       <OrderType />
+      <OrderQuantity />
     </Box>
   );
 };
