@@ -6,7 +6,9 @@ import TextField from "@mui/material/TextField";
 import { useContext, useEffect, useState } from "react";
 
 import { StrategyOneContext } from "./StrategyOneContext";
+import "./PlaceOrder.css";
 import OrderSide from "./OrderSide";
+import OrderType from "./OrderType";
 
 const PlaceOrder = () => {
   const { serverUrl, assetValue, asset, assetArray, isFetching } =
@@ -14,8 +16,9 @@ const PlaceOrder = () => {
 
   console.log(asset, assetValue, assetArray);
   return (
-    <Box>
+    <Box className="place-order">
       <OrderSide />
+      <OrderType />
     </Box>
   );
 };

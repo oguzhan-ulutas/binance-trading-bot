@@ -24,6 +24,7 @@ const StrategyOne = () => {
   const [assetArray, setAssetArray] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [side, setSide] = useState("");
+  const [orderType, setOrderType] = useState("");
 
   return (
     <StrategyOneContext.Provider
@@ -39,6 +40,8 @@ const StrategyOne = () => {
         setIsFetching,
         side,
         setSide,
+        orderType,
+        setOrderType,
       }}
     >
       <GetAssetValue />
