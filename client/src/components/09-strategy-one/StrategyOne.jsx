@@ -27,6 +27,31 @@ const StrategyOne = () => {
   const [side, setSide] = useState("");
   const [orderType, setOrderType] = useState("");
   const [orderQuantity, setOrderQuantity] = useState("");
+  const [isBotStarted, setIsBotStarted] = useState(false);
+
+  const placeOrder = (pair, side, orderType, quantity) => {
+    const url = `${serverUrl}/margin/place-order`;
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pair, side, orderType, quantity }),
+    })
+      .then((res) => {
+        if (res.status >= 400) {
+          throw new Error("server error");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("Trade fetch error: ", err);
+      });
+  };
 
   return (
     <StrategyOneContext.Provider
@@ -46,6 +71,9 @@ const StrategyOne = () => {
         setOrderType,
         orderQuantity,
         setOrderQuantity,
+        placeOrder,
+        isBotStarted,
+        setIsBotStarted,
       }}
     >
       <GetAssetValue />

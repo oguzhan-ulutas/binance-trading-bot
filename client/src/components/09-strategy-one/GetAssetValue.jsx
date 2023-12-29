@@ -80,11 +80,11 @@ const GetAssetValue = () => {
             isFetching ? setIsFetching(false) : setIsFetching(true)
           }
         >
-          {isFetching ? "Stop" : "Start"}
+          {isFetching ? "Stop Fetching Price" : "Start Fetching Price"}
         </Button>
         <Typography variant="h6" gutterBottom>
           Current Price: {assetValue}
-        </Typography>{" "}
+        </Typography>
       </Box>
     </Box>
   );
