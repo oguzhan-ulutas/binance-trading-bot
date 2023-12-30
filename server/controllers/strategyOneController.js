@@ -73,21 +73,22 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   order.entryPrice = (parseFloat(order.executedQtyUsdt) / parseFloat(order.executedQty)).toFixed(2);
 
   // Calculate stop and take profit price
-  const stopOrderPrice = (
-    parseFloat(order.entryPrice) -
-    parseFloat(order.entryPrice) * 0.005
-  ).toFixed(2);
-  const takeProfitPrice = (
-    parseFloat(order.entryPrice) +
-    parseFloat(order.entryPrice) * 0.005
-  ).toFixed(2);
+  const stopOrderPrice =
+    req.body.side === 'BUY'
+      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(2)
+      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(2);
+  const takeProfitPrice =
+    req.body.side === 'BUY'
+      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(2)
+      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(2);
+
   order.stopOrderPrice = stopOrderPrice;
   order.takeProfitPrice = takeProfitPrice;
 
   // Place a stop order
   const stopOrderSide = req.body.side === 'BUY' ? 'SELL' : 'BUY';
   const price =
-    req.body.side === 'BUY'
+    stopOrderSide === 'SELL'
       ? parseFloat(order.stopOrderPrice).toFixed(2) * 0.9
       : parseFloat(order.stopOrderPrice).toFixed(2) * 1.1;
 
