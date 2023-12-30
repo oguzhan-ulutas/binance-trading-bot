@@ -55,12 +55,11 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     (acc, fill) => acc + parseFloat(fill.commission),
     0,
   );
-  order.cumulativeBnbCommission = cumulativeBnbCommission.toFixed(2);
+  order.cumulativeBnbCommission = cumulativeBnbCommission;
 
   // Calculate commission in usdt
-  order.cumulativeUsdtCommission = (
-    parseFloat(order.bnbPrice) * parseFloat(order.cumulativeBnbCommission)
-  ).toFixed(2);
+  order.cumulativeUsdtCommission =
+    parseFloat(order.bnbPrice) * parseFloat(order.cumulativeBnbCommission);
 
   // Calculate executed qty in usdt
   const executedQtyUsdt = await order.fills.reduce(

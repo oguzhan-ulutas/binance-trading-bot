@@ -50,8 +50,9 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
   userMarginData.netBalance = `${netBalance}`;
 
   // Extract borrowed coins from netBalance
-  const borrowedAssets = await userMarginData.userAssets.filter((asset) => asset.borrowed !== '0');
-  console.log(borrowedAssets);
+  const borrowedAssets = await userMarginData.userAssets.filter(
+    (asset) => asset.borrowed !== '0' && asset.asset !== 'USDT',
+  );
 
   const borrowedUsdtValue = await borrowedAssets.reduce(
     (acc, asset) => acc + parseFloat(asset.lastUsdtUnitValue) * parseFloat(asset.borrowed),
