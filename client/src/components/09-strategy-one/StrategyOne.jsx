@@ -28,6 +28,7 @@ const StrategyOne = () => {
   const [orderType, setOrderType] = useState("");
   const [orderQuantity, setOrderQuantity] = useState("");
   const [isBotStarted, setIsBotStarted] = useState(false);
+  const [entryPrice, setEntryPrice] = useState(0);
 
   const placeOrder = (pair, side, orderType, quantity) => {
     const url = `${serverUrl}/margin/place-order`;

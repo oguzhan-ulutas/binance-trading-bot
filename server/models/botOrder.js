@@ -30,6 +30,9 @@ const BotOrderSchema = new Schema({
   cumulativeBnbCommission: { type: String },
   cumulativeUsdtCommission: { type: String },
   executedQtyUsdt: { type: String },
+  entryPrice: { type: String },
+  stopOrderPrice: { type: String },
+  takeProfitPrice: { type: String },
 });
 
 module.exports = mongoose.model('BotOrder', BotOrderSchema);

@@ -68,6 +68,14 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   );
   order.executedQtyUsdt = executedQtyUsdt;
 
+  // Calculate entryPrice
+  order.entryPrice = parseFloat(order.executedQtyUsdt) / parseFloat(order.executedQty);
+
+  // Calculate stop and take profit price
+  const stopOrderPrice = parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005;
+  const takeProfitPrice = parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005;
+  order.stopOrderPrice = stopOrderPrice;
+  order.takeProfitPrice = takeProfitPrice;
   // Create new BotOrder Instance
   const orderInstance = new BotOrder(order);
 

@@ -56,7 +56,7 @@ export default function StartBotButton() {
             ? isBotStarted
               ? startButtonActions()
               : setIsBotStarted(true)
-            : startButtonActions(); //setOpen(true);
+            : setOpen(true);
         }}
       >
         {isBotStarted ? "Stop Bot" : "Start Bot"}
