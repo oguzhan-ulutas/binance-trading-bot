@@ -8,10 +8,24 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 
-export default function StartFetchAlert() {
+export default function StartBotButton() {
   const [open, setOpen] = React.useState(true);
-  const { isFetching, isBotStarted, setIsBotStarted } =
-    React.useContext(StrategyOneContext);
+  const {
+    isFetching,
+    isBotStarted,
+    setIsBotStarted,
+    asset,
+    side,
+    orderType,
+    orderQuantity,
+    placeOrder,
+  } = React.useContext(StrategyOneContext);
+
+  const startButtonActions = () => {
+    console.log(asset, side, orderType, orderQuantity);
+    setIsBotStarted(false);
+    placeOrder(asset, side, orderType, orderQuantity);
+  };
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -40,9 +54,9 @@ export default function StartFetchAlert() {
         onClick={() => {
           isFetching
             ? isBotStarted
-              ? setIsBotStarted(false)
+              ? startButtonActions()
               : setIsBotStarted(true)
-            : setOpen(true);
+            : startButtonActions(); //setOpen(true);
         }}
       >
         {isBotStarted ? "Stop Bot" : "Start Bot"}

@@ -40,6 +40,7 @@ const StrategyOne = () => {
       body: JSON.stringify({ pair, side, orderType, quantity }),
     })
       .then((res) => {
+        console.log(res);
         if (res.status >= 400) {
           throw new Error("server error");
         }
@@ -49,7 +50,7 @@ const StrategyOne = () => {
         console.log(res);
       })
       .catch((err) => {
-        console.log("Trade fetch error: ", err);
+        console.log("Place order error: ", err);
       });
   };
 

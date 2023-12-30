@@ -11,7 +11,7 @@ const OrderType = () => {
   const { orderType, setOrderType } = useContext(StrategyOneContext);
 
   const handleChange = (event) => {
-    setSide(event.target.value);
+    setOrderType(event.target.value);
   };
 
   return (
@@ -22,7 +22,7 @@ const OrderType = () => {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={orderType}
-          label="Side"
+          label="Order type"
           onChange={handleChange}
         >
           <MenuItem value={"LIMIT"}>LIMIT</MenuItem>

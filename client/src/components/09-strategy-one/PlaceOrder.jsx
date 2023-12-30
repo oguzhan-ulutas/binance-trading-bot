@@ -10,7 +10,7 @@ import "./PlaceOrder.css";
 import OrderSide from "./OrderSide";
 import OrderType from "./OrderType";
 import OrderQuantity from "./OrderQuantity";
-import StartFetchAlert from "./StartFetchAlert";
+import StartBotButton from "./StartBotButton";
 
 const PlaceOrder = () => {
   const {
@@ -32,7 +32,7 @@ const PlaceOrder = () => {
       <OrderSide />
       <OrderType />
       <OrderQuantity />
-      <StartFetchAlert />
+      <StartBotButton />
     </Box>
   );
 };

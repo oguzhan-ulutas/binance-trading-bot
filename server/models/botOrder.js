@@ -26,6 +26,10 @@ const BotOrderSchema = new Schema({
   accountId: { type: Number },
   selfTradePreventionMode: { type: String },
   fills: { type: Array },
+  bnbPrice: { type: String },
+  cumulativeBnbCommission: { type: String },
+  cumulativeUsdtCommission: { type: String },
+  executedQtyUsdt: { type: String },
 });
 
 module.exports = mongoose.model('BotOrder', BotOrderSchema);

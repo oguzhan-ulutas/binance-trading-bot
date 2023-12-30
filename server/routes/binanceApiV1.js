@@ -37,4 +37,7 @@ router.post('/margin/trades', marginController.getTrades);
 // Get asset price
 router.post('/margin/strategy-one/get-asset-value', strategyOneController.getAssetValue);
 
+// Place order
+router.post('/margin/place-order', strategyOneController.placeOrder);
+
 module.exports = router;
