@@ -55,27 +55,60 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     (acc, fill) => acc + parseFloat(fill.commission),
     0,
   );
-  order.cumulativeBnbCommission = cumulativeBnbCommission;
+  order.cumulativeBnbCommission = cumulativeBnbCommission.toFixed(2);
 
   // Calculate commission in usdt
-  order.cumulativeUsdtCommission =
-    parseFloat(order.bnbPrice) * parseFloat(order.cumulativeBnbCommission);
+  order.cumulativeUsdtCommission = (
+    parseFloat(order.bnbPrice) * parseFloat(order.cumulativeBnbCommission)
+  ).toFixed(2);
 
   // Calculate executed qty in usdt
   const executedQtyUsdt = await order.fills.reduce(
     (acc, fill) => acc + parseFloat(fill.price) * parseFloat(fill.qty),
     0,
   );
-  order.executedQtyUsdt = executedQtyUsdt;
+  order.executedQtyUsdt = executedQtyUsdt.toFixed(2);
 
   // Calculate entryPrice
-  order.entryPrice = parseFloat(order.executedQtyUsdt) / parseFloat(order.executedQty);
+  order.entryPrice = (parseFloat(order.executedQtyUsdt) / parseFloat(order.executedQty)).toFixed(2);
 
   // Calculate stop and take profit price
-  const stopOrderPrice = parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005;
-  const takeProfitPrice = parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005;
+  const stopOrderPrice = (
+    parseFloat(order.entryPrice) -
+    parseFloat(order.entryPrice) * 0.005
+  ).toFixed(2);
+  const takeProfitPrice = (
+    parseFloat(order.entryPrice) +
+    parseFloat(order.entryPrice) * 0.005
+  ).toFixed(2);
   order.stopOrderPrice = stopOrderPrice;
   order.takeProfitPrice = takeProfitPrice;
+
+  // Place a stop order
+  const stopOrderSide = req.body.side === 'BUY' ? 'SELL' : 'BUY';
+  const price =
+    req.body.side === 'BUY'
+      ? parseFloat(order.stopOrderPrice).toFixed(2) * 0.9
+      : parseFloat(order.stopOrderPrice).toFixed(2) * 1.1;
+
+  await client
+    .newMarginOrder(
+      `${req.body.pair}`, // symbol
+      `${stopOrderSide}`,
+      'STOP_LOSS_LIMIT',
+      {
+        quantity: parseFloat(order.executedQty),
+        newOrderRespType: 'FULL',
+        stopPrice: parseFloat(order.stopOrderPrice).toFixed(2),
+        price: parseFloat(price).toFixed(2),
+        timeInForce: 'GTC',
+      },
+    )
+    .then((response) => {
+      order.stopOrder = response.data;
+    })
+    .catch((error) => client.logger.error(error));
+
   // Create new BotOrder Instance
   const orderInstance = new BotOrder(order);
 
