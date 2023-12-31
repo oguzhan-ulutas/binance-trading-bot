@@ -10,6 +10,7 @@
 // 7 - Open new order and repeat
 
 import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
 
 import { useState } from "react";
 
@@ -17,6 +18,7 @@ import { StrategyOneContext } from "./StrategyOneContext";
 import GetAssetValue from "./GetAssetValue";
 import PlaceOrder from "./PlaceOrder";
 import BotActionInfo from "./BotActionInfo";
+import "./StrategyOne.css";
 
 const StrategyOne = () => {
   const serverUrl = import.meta.env.VITE_serverUrl;
@@ -29,60 +31,7 @@ const StrategyOne = () => {
   const [orderType, setOrderType] = useState("");
   const [orderQuantity, setOrderQuantity] = useState("");
   const [isBotStarted, setIsBotStarted] = useState(false);
-  const [order, setOrder] = useState({
-    _id: {
-      $oid: "65902fa63d27523d5bc18251",
-    },
-    symbol: "BTCUSDT",
-    orderId: 1,
-    clientOrderId: "aF3txk5zrVZPRAzRXjMSld",
-    transactTime: {
-      $date: "2023-12-30T14:56:37.176Z",
-    },
-    price: "0",
-    origQty: "0.00047",
-    executedQty: "0.00047",
-    status: "FILLED",
-    timeInForce: "GTC",
-    type: "MARKET",
-    side: "SELL",
-    isIsolated: false,
-    selfTradePreventionMode: "EXPIRE_MAKER",
-    fills: [
-      {
-        price: "42205.34",
-        qty: "0.00047",
-        commission: "0.00004674",
-        commissionAsset: "BNB",
-        tradeId: 3343367718,
-      },
-    ],
-    bnbPrice: "318.06051252",
-    cumulativeBnbCommission: "0.00",
-    cumulativeUsdtCommission: "0.00",
-    executedQtyUsdt: "19.84",
-    entryPrice: "42212.77",
-    stopOrderPrice: "42423.83",
-    takeProfitPrice: "42001.71",
-    stopOrder: {
-      symbol: "BTCUSDT",
-      orderId: 23988980451,
-      clientOrderId: "Mi2xtUXwUpB7hAGUDbmOjy",
-      transactTime: 1703948198396,
-      price: "46666.21",
-      origQty: "0.00047",
-      executedQty: "0",
-      cummulativeQuoteQty: "0",
-      status: "NEW",
-      timeInForce: "GTC",
-      type: "STOP_LOSS_LIMIT",
-      side: "BUY",
-      fills: [],
-      isIsolated: false,
-      selfTradePreventionMode: "EXPIRE_MAKER",
-    },
-    __v: 0,
-  });
+  const [order, setOrder] = useState({});
 
   const placeOrder = (pair, side, orderType, quantity) => {
     const url = `${serverUrl}/margin/place-order`;
@@ -138,10 +87,16 @@ const StrategyOne = () => {
       }}
     >
       <GetAssetValue />
+
       <Divider style={{ margin: "20px 0" }} />
-      <PlaceOrder />
+
+      <div className="bot-info-div">
+        <PlaceOrder />
+        <Divider orientation="vertical" flexItem />
+        <BotActionInfo />
+      </div>
+
       <Divider style={{ margin: "20px 0" }} />
-      <BotActionInfo />
     </StrategyOneContext.Provider>
   );
 };

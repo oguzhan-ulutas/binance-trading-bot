@@ -9,7 +9,7 @@ import { intlFormat } from "date-fns";
 
 const BotActionInfo = () => {
   const { order, assetArray } = useContext(StrategyOneContext);
-  const [toTarget, setToTarget] = useState(0);
+  const [toTarget, setToTarget] = useState(null);
 
   useEffect(() => {
     setToTarget(
@@ -19,7 +19,7 @@ const BotActionInfo = () => {
       ).toFixed(2)
     );
   }, [assetArray]);
-  console.log(toTarget);
+
   return (
     <div className="bot-order-info">
       <Typography variant="h5" gutterBottom>
