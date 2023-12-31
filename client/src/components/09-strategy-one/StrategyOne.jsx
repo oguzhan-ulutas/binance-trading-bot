@@ -19,6 +19,7 @@ import GetAssetValue from "./GetAssetValue";
 import PlaceOrder from "./PlaceOrder";
 import BotActionInfo from "./BotActionInfo";
 import "./StrategyOne.css";
+import TakeProfit from "./TakeProfit";
 
 const StrategyOne = () => {
   const serverUrl = import.meta.env.VITE_serverUrl;
@@ -31,7 +32,63 @@ const StrategyOne = () => {
   const [orderType, setOrderType] = useState("");
   const [orderQuantity, setOrderQuantity] = useState("");
   const [isBotStarted, setIsBotStarted] = useState(false);
-  const [order, setOrder] = useState({});
+  const [order, setOrder] = useState(
+    /**
+     * Paste one or more documents here
+     */
+    {
+      symbol: "BTCUSDT",
+      orderId: 23988972039,
+      clientOrderId: "82PSxPMo0oZ2oGYK5S7vZP",
+      transactTime: {
+        $date: "2023-12-30T14:55:02.923Z",
+      },
+      price: "0",
+      origQty: "0.00047",
+      executedQty: "0.00047",
+      status: "FILLED",
+      timeInForce: "GTC",
+      type: "MARKET",
+      side: "BUY",
+      isIsolated: false,
+      selfTradePreventionMode: "EXPIRE_MAKER",
+      fills: [
+        {
+          price: "42187.18",
+          qty: "0.00047",
+          commission: "0.00004677",
+          commissionAsset: "BNB",
+          tradeId: 3343367087,
+        },
+      ],
+      bnbPrice: "317.87201085",
+      cumulativeBnbCommission: "0.00",
+      cumulativeUsdtCommission: "0.00",
+      executedQtyUsdt: "19.83",
+      entryPrice: "42588.49",
+      stopOrderPrice: "42360.53",
+      takeProfitPrice: "42700.45",
+      stopOrder: {
+        symbol: "BTCUSDT",
+        orderId: 23988972090,
+        clientOrderId: "1zMcCElRy6eHWEeoFJ5GQc",
+        transactTime: 1703948103700,
+        price: "37782.48",
+        origQty: "0.00047",
+        executedQty: "0",
+        cummulativeQuoteQty: "0",
+        status: "NEW",
+        timeInForce: "GTC",
+        type: "STOP_LOSS_LIMIT",
+        side: "SELL",
+        fills: [],
+        isIsolated: false,
+        selfTradePreventionMode: "EXPIRE_MAKER",
+      },
+      __v: 0,
+    }
+  );
+  const [toTarget, setToTarget] = useState(null);
 
   const placeOrder = (pair, side, orderType, quantity) => {
     const url = `${serverUrl}/margin/place-order`;
@@ -84,6 +141,8 @@ const StrategyOne = () => {
         setIsBotStarted,
         order,
         setOrder,
+        toTarget,
+        setToTarget,
       }}
     >
       <GetAssetValue />
@@ -95,6 +154,8 @@ const StrategyOne = () => {
         <Divider orientation="vertical" flexItem />
         <BotActionInfo />
       </div>
+
+      <TakeProfit />
 
       <Divider style={{ margin: "20px 0" }} />
     </StrategyOneContext.Provider>
