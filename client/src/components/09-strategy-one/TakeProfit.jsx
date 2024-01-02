@@ -12,7 +12,6 @@ const TakeProfit = () => {
     useContext(StrategyOneContext);
   const [toTakeProfit, setToTakeProfit] = useState(null); // null
   const [takeProfit, setTakeProfit] = useState(false); // false
-  console.log(toTakeProfit);
 
   const updateToTakeProfit = () => {
     if (order.side === "BUY") {
