@@ -8,10 +8,11 @@ import Button from "@mui/material/Button";
 import BotInfoTable from "./BotInfoTable";
 
 const TakeProfit = () => {
-  const { serverUrl, order, assetArray, asset } =
+  const { serverUrl, order, setOrder, assetArray, asset } =
     useContext(StrategyOneContext);
-  const [toTakeProfit, setToTakeProfit] = useState(null);
-  const [takeProfit, setTakeProfit] = useState(false);
+  const [toTakeProfit, setToTakeProfit] = useState(null); // null
+  const [takeProfit, setTakeProfit] = useState(false); // false
+  console.log(toTakeProfit);
 
   const updateToTakeProfit = () => {
     if (order.side === "BUY") {
@@ -33,11 +34,11 @@ const TakeProfit = () => {
     }
   };
 
-  useEffect(() => {
-    if (assetArray.length > 3) {
-      updateToTakeProfit();
-    }
-  }, [assetArray]);
+  // useEffect(() => {
+  //   if (assetArray.length > 3) {
+  //     updateToTakeProfit();
+  //   }
+  // }, [assetArray]);
 
   // if toTakeProfit equal or smaller then zero set take profit to true
   const updateTakeProfit = () => {
@@ -68,20 +69,18 @@ const TakeProfit = () => {
         }),
       })
         .then((res) => {
-          console.log(res);
           if (res.status >= 400) {
             throw new Error("server error");
           }
           return res.json();
         })
         .then((res) => {
-          if (res.status === "FILLED") {
-          }
-          console.log(res);
+          setOrder(res);
         })
         .catch((err) => {
           console.log("Place order error: ", err);
         });
+      setTakeProfit(false);
     }
   }, [toTakeProfit]);
 
@@ -93,6 +92,14 @@ const TakeProfit = () => {
       <Typography variant="caption" gutterBottom>
         Nan
       </Typography>
+      <Button
+        onClick={() => {
+          setTakeProfit(true);
+          setToTakeProfit(toTakeProfit + 1);
+        }}
+      >
+        Set toTakeProfit
+      </Button>
       <BotInfoTable />
     </Box>
   );

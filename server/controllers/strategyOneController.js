@@ -116,3 +116,32 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
 
   res.json(orderInstance);
 });
+
+// Delete stop order
+exports.deleteStopOrder = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+
+  // Cancel stop order
+  let cancelOrderRes = {};
+  await client
+    .cancelMarginOrder(
+      req.body.asset, // symbol
+      {
+        orderId: req.body.stopOrderId,
+      },
+    )
+    .then((response) => (cancelOrderRes = response.data))
+    .catch((error) => client.logger.error(error));
+
+  console.log(cancelOrderRes);
+
+  // Find order and update stop order
+
+  const updatedOrder = await BotOrder.findOneAndUpdate(
+    { orderId: req.body.orderId },
+    { $set: { stopOrder: cancelOrderRes } },
+    { new: true },
+  );
+
+  res.json(updatedOrder);
+});

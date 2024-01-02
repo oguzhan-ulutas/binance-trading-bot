@@ -70,7 +70,7 @@ const StrategyOne = () => {
       takeProfitPrice: "42700.45",
       stopOrder: {
         symbol: "BTCUSDT",
-        orderId: 23988972090,
+        orderId: 24024556807,
         clientOrderId: "1zMcCElRy6eHWEeoFJ5GQc",
         transactTime: 1703948103700,
         price: "37782.48",

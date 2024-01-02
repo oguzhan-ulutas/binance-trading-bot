@@ -40,4 +40,7 @@ router.post('/margin/strategy-one/get-asset-value', strategyOneController.getAss
 // Place order
 router.post('/margin/place-order', strategyOneController.placeOrder);
 
+// Delete Stop Order
+router.post('/margin/delete-stop-order', strategyOneController.deleteStopOrder);
+
 module.exports = router;
