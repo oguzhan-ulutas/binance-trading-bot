@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { StrategyOneContext } from "./StrategyOneContext";
 
 export default function StartBotButton() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(null);
   const {
     isFetching,
     isBotStarted,
@@ -22,10 +22,18 @@ export default function StartBotButton() {
   } = React.useContext(StrategyOneContext);
 
   const startButtonActions = () => {
-    console.log(asset, side, orderType, orderQuantity);
-    setIsBotStarted(false);
+    console.log({ asset, side, orderType, orderQuantity });
+    setIsBotStarted(true);
     placeOrder(asset, side, orderType, orderQuantity);
   };
+
+  React.useEffect(() => {
+    if (isFetching) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  }, [isFetching]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -54,8 +62,8 @@ export default function StartBotButton() {
         onClick={() => {
           isFetching
             ? isBotStarted
-              ? startButtonActions()
-              : setIsBotStarted(true)
+              ? setIsBotStarted(false)
+              : startButtonActions()
             : setOpen(true);
         }}
       >

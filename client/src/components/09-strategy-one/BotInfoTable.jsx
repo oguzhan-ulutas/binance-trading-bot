@@ -161,21 +161,23 @@ export default function BotInfoTable() {
   // Crete new row
   const [id, setId] = React.useState(1);
   React.useState(() => {
-    const newRow = createData(
-      id,
-      order.symbol,
-      order.side,
-      order.status,
-      order.stopOrder.status,
-      order.entryPrice,
-      order.executedQty,
-      order.executedQtyUsdt,
-      order.cumulativeUsdtCommission,
-      order.stopOrderPrice,
-      order.takeProfitPrice
-    );
-    setId(id + 1);
-    rows.push(newRow);
+    if (order.orderId) {
+      const newRow = createData(
+        id,
+        order.symbol,
+        order.side,
+        order.status,
+        order.stopOrder.status,
+        order.entryPrice,
+        order.executedQty,
+        order.executedQtyUsdt,
+        order.cumulativeUsdtCommission,
+        order.stopOrderPrice,
+        order.takeProfitPrice
+      );
+      setId(id + 1);
+      rows.push(newRow);
+    }
   }, [order]);
   return (
     <Paper style={{ height: 400, width: "100%" }}>

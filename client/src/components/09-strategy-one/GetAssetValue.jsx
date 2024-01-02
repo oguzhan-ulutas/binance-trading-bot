@@ -37,7 +37,6 @@ const GetAssetValue = () => {
       });
       const result = await response.json();
       await setAssetValue(parseFloat(result.price).toFixed(2));
-      console.log(assetValue);
     } catch (error) {
       console.error("Error fetching data in GetAssetValue:", error);
     }
@@ -57,7 +56,6 @@ const GetAssetValue = () => {
 
   useEffect(() => {
     setAssetArray([...assetArray, parseFloat(assetValue)]);
-    console.log(assetArray);
   }, [assetValue]);
 
   return (

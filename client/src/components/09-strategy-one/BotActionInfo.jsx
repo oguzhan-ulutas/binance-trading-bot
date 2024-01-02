@@ -25,7 +25,7 @@ const BotActionInfo = () => {
         Bot Actions
         <br />
         {order.orderId ? (
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="subtitle1" gutterBottom>
             Order Placed at {order.entryPrice} Usdt.
             <br />
             {order.stopOrder.orderId ? "Stop order placed." : null}

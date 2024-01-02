@@ -10,7 +10,7 @@ import BotInfoTable from "./BotInfoTable";
 const TakeProfit = () => {
   const { serverUrl, order, setOrder, assetArray, asset } =
     useContext(StrategyOneContext);
-  const [toTakeProfit, setToTakeProfit] = useState(null); // null
+  const [toTakeProfit, setToTakeProfit] = useState(100); // A random positive number
   const [takeProfit, setTakeProfit] = useState(false); // false
 
   const updateToTakeProfit = () => {
@@ -33,15 +33,15 @@ const TakeProfit = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (assetArray.length > 3) {
-  //     updateToTakeProfit();
-  //   }
-  // }, [assetArray]);
+  useEffect(() => {
+    if (assetArray.length > 3) {
+      updateToTakeProfit();
+    }
+  }, [assetArray]);
 
   // if toTakeProfit equal or smaller then zero set take profit to true
   const updateTakeProfit = () => {
-    if (toTakeProfit <= 0) {
+    if (parseFloat(toTakeProfit) <= 0) {
       setTakeProfit(true);
     }
   };
@@ -53,6 +53,7 @@ const TakeProfit = () => {
   // if takeProfit true cancel open stop order
 
   useEffect(() => {
+    console.log(takeProfit);
     if (takeProfit === true) {
       const url = `${serverUrl}/margin/delete-stop-order`;
       fetch(url, {
@@ -75,11 +76,11 @@ const TakeProfit = () => {
         })
         .then((res) => {
           setOrder(res);
+          setTakeProfit(false);
         })
         .catch((err) => {
           console.log("Place order error: ", err);
         });
-      setTakeProfit(false);
     }
   }, [toTakeProfit]);
 
@@ -87,18 +88,20 @@ const TakeProfit = () => {
     <Box style={{ margin: "40px 0" }}>
       <Typography variant="h3" gutterBottom>
         To Take Profit : {toTakeProfit}
+        <br />
+        Take Profit : {takeProfit}
       </Typography>
       <Typography variant="caption" gutterBottom>
         Nan
       </Typography>
-      <Button
+      {/* <Button
         onClick={() => {
           setTakeProfit(true);
           setToTakeProfit(toTakeProfit + 1);
         }}
       >
         Set toTakeProfit
-      </Button>
+      </Button> */}
       <BotInfoTable />
     </Box>
   );

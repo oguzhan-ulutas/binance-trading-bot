@@ -112,7 +112,12 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   // Create new BotOrder Instance
   const orderInstance = new BotOrder(order);
 
-  await orderInstance.save();
+  try {
+    const savedOrder = await orderInstance.save();
+    console.log('Order saved successfully:', savedOrder);
+  } catch (error) {
+    console.error('Error saving order:', error);
+  }
 
   res.json(orderInstance);
 });
@@ -132,8 +137,6 @@ exports.deleteStopOrder = asyncHandler(async (req, res, next) => {
     )
     .then((response) => (cancelOrderRes = response.data))
     .catch((error) => client.logger.error(error));
-
-  console.log(cancelOrderRes);
 
   // Find order and update stop order
 
