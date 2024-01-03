@@ -31,10 +31,11 @@ const StrategyOne = () => {
   const [side, setSide] = useState("");
   const [orderType, setOrderType] = useState("");
   const [orderQuantity, setOrderQuantity] = useState("");
-  const [isBotStarted, setIsBotStarted] = useState(false);
+  const [isBotStarted, setIsBotStarted] = useState(false); // false
   const [order, setOrder] = useState({});
   const [toTakeProfit, setToTakeProfit] = useState(100); // A random positive number
   const [takeProfit, setTakeProfit] = useState(false); // false
+  const [isStopped, setIsStopped] = useState(false);
 
   const placeOrder = (pair, side, quantity) => {
     const url = `${serverUrl}/margin/place-order`;
@@ -92,6 +93,8 @@ const StrategyOne = () => {
         setToTakeProfit,
         takeProfit,
         setTakeProfit,
+        isStopped,
+        setIsStopped,
       }}
     >
       <GetAssetValue />

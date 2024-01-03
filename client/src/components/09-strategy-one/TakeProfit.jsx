@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import BotInfoTable from "./BotInfoTable";
+import IsStopOrderFilled from "./IsStopOrderFilled";
 
 const TakeProfit = () => {
   const {
@@ -103,9 +104,8 @@ const TakeProfit = () => {
         <br />
         Take Profit : {takeProfit}
       </Typography>
-      <Typography variant="caption" gutterBottom>
-        Nan
-      </Typography>
+      <IsStopOrderFilled />
+
       <Button
         onClick={() => {
           if (parseFloat(toTakeProfit) >= 0) {

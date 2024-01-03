@@ -226,8 +226,8 @@ const BotActionInfo = () => {
     // Push order to orderArray, if it already exist update it
     if (order.orderId) {
       orderArray.map((item, index, array) => {
-        if (item.orderId === order.orderId) {
-          array[index] = order;
+        if (item.order.orderId === order.orderId) {
+          array[index] = { orderCount: item.orderCount, order };
         } else {
           const newItem = { orderCount, order };
           setOrderCount(orderCount + 1);
