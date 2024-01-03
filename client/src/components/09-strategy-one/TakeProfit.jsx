@@ -8,10 +8,20 @@ import Button from "@mui/material/Button";
 import BotInfoTable from "./BotInfoTable";
 
 const TakeProfit = () => {
-  const { serverUrl, order, setOrder, assetArray, asset } =
-    useContext(StrategyOneContext);
-  const [toTakeProfit, setToTakeProfit] = useState(100); // A random positive number
-  const [takeProfit, setTakeProfit] = useState(false); // false
+  const {
+    serverUrl,
+    order,
+    setOrder,
+    assetArray,
+    asset,
+    side,
+    orderQuantity,
+    placeOrder,
+    toTakeProfit,
+    setToTakeProfit,
+    takeProfit,
+    setTakeProfit,
+  } = useContext(StrategyOneContext);
 
   const updateToTakeProfit = () => {
     if (order.side === "BUY") {
@@ -33,11 +43,11 @@ const TakeProfit = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (assetArray.length > 3) {
-  //     updateToTakeProfit();
-  //   }
-  // }, [assetArray]);
+  useEffect(() => {
+    if (assetArray.length > 3) {
+      updateToTakeProfit();
+    }
+  }, [assetArray]);
 
   // if toTakeProfit equal or smaller then zero set take profit to true
   const updateTakeProfit = () => {
@@ -55,7 +65,7 @@ const TakeProfit = () => {
   useEffect(() => {
     console.log(takeProfit);
     if (takeProfit === true) {
-      const url = `${serverUrl}/margin/delete-stop-order`;
+      const url = `${serverUrl}/margin/take-profit`;
       fetch(url, {
         method: "POST",
         mode: "cors",
@@ -77,6 +87,8 @@ const TakeProfit = () => {
         .then((res) => {
           setOrder(res);
           setTakeProfit(false);
+          // Placing new order after taking profit
+          placeOrder(asset, side, orderQuantity);
         })
         .catch((err) => {
           console.log("Place order error: ", err);
@@ -96,8 +108,13 @@ const TakeProfit = () => {
       </Typography>
       <Button
         onClick={() => {
-          setToTakeProfit(-1);
-          setTakeProfit(true);
+          if (parseFloat(toTakeProfit) >= 0) {
+            setToTakeProfit(-1);
+            setTakeProfit(true);
+          } else {
+            setTakeProfit(1);
+            setTakeProfit(false);
+          }
         }}
       >
         Set toTakeProfit

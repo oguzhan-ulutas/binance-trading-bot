@@ -33,9 +33,10 @@ const StrategyOne = () => {
   const [orderQuantity, setOrderQuantity] = useState("");
   const [isBotStarted, setIsBotStarted] = useState(false);
   const [order, setOrder] = useState({});
-  const [toTarget, setToTarget] = useState(null);
+  const [toTakeProfit, setToTakeProfit] = useState(100); // A random positive number
+  const [takeProfit, setTakeProfit] = useState(false); // false
 
-  const placeOrder = (pair, side, orderType, quantity) => {
+  const placeOrder = (pair, side, quantity) => {
     const url = `${serverUrl}/margin/place-order`;
     fetch(url, {
       method: "POST",
@@ -43,7 +44,7 @@ const StrategyOne = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ pair, side, orderType, quantity }),
+      body: JSON.stringify({ pair, side, quantity }),
     })
       .then((res) => {
         console.log(res);
@@ -87,8 +88,10 @@ const StrategyOne = () => {
         setIsBotStarted,
         order,
         setOrder,
-        toTarget,
-        setToTarget,
+        toTakeProfit,
+        setToTakeProfit,
+        takeProfit,
+        setTakeProfit,
       }}
     >
       <GetAssetValue />

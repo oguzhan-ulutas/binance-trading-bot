@@ -31,7 +31,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     .newMarginOrder(
       req.body.pair, // symbol
       req.body.side,
-      req.body.orderType,
+      'MARKET',
       {
         quoteOrderQty: parseFloat(req.body.quantity),
         newOrderRespType: 'FULL',
@@ -123,7 +123,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
 });
 
 // Delete stop order
-exports.deleteStopOrder = asyncHandler(async (req, res, next) => {
+exports.takeProfit = asyncHandler(async (req, res, next) => {
   console.log(req.body);
   // Find order
   const order = await BotOrder.findOne({ orderId: req.body.orderId });
@@ -165,7 +165,15 @@ exports.deleteStopOrder = asyncHandler(async (req, res, next) => {
     { new: true },
   );
 
-  console.log('Order updated', updatedOrder);
+  // Place a new order
+  // const request = {
+  //   body: {
+  //     pair: updatedOrder.symbol,
+  //     side: updatedOrder.side,
+  //     quantity: updatedOrder.executedQtyUsdt,
+  //   },
+  // };
+  // this.placeOrder(request);
 
   res.json(updatedOrder);
 });

@@ -24,7 +24,7 @@ export default function StartBotButton() {
   const startButtonActions = () => {
     console.log({ asset, side, orderType, orderQuantity });
     setIsBotStarted(true);
-    placeOrder(asset, side, orderType, orderQuantity);
+    placeOrder(asset, side, orderQuantity);
   };
 
   React.useEffect(() => {
