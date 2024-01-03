@@ -29,11 +29,11 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   // Place order on binance
   await client
     .newMarginOrder(
-      `${req.body.pair}`, // symbol
-      `${req.body.side}`,
-      `${req.body.orderType}`,
+      req.body.pair, // symbol
+      req.body.side,
+      req.body.orderType,
       {
-        quoteOrderQty: `${parseFloat(req.body.quantity)}`,
+        quoteOrderQty: parseFloat(req.body.quantity),
         newOrderRespType: 'FULL',
       },
     )
@@ -125,9 +125,10 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
 // Delete stop order
 exports.deleteStopOrder = asyncHandler(async (req, res, next) => {
   console.log(req.body);
+  // Find order
+  const order = await BotOrder.findOne({ orderId: req.body.orderId });
 
   // Cancel stop order
-  let cancelOrderRes = {};
   await client
     .cancelMarginOrder(
       req.body.asset, // symbol
@@ -135,16 +136,36 @@ exports.deleteStopOrder = asyncHandler(async (req, res, next) => {
         orderId: req.body.stopOrderId,
       },
     )
-    .then((response) => (cancelOrderRes = response.data))
+    .then((response) => (order.stopOrder = response.data))
     .catch((error) => client.logger.error(error));
 
-  // Find order and update stop order
+  // Open Take Profit order
+  const orderSide = order.side === 'BUY' ? 'SELL' : 'BUY';
+  console.log(order.symbol, orderSide, order.executedQty);
+  await client
+    .newMarginOrder(
+      order.symbol, // symbol
+      orderSide,
+      'MARKET',
+      {
+        quantity: parseFloat(order.executedQty),
+        newOrderRespType: 'FULL',
+      },
+    )
+    .then((response) => {
+      order.resultOrder = response.data;
+    })
+    .catch((error) => client.logger.error(error));
+
+  // Find order and update on the database
 
   const updatedOrder = await BotOrder.findOneAndUpdate(
-    { orderId: req.body.orderId },
-    { $set: { stopOrder: cancelOrderRes } },
+    { orderId: order.orderId },
+    { $set: order },
     { new: true },
   );
+
+  console.log('Order updated', updatedOrder);
 
   res.json(updatedOrder);
 });

@@ -33,11 +33,11 @@ const TakeProfit = () => {
     }
   };
 
-  useEffect(() => {
-    if (assetArray.length > 3) {
-      updateToTakeProfit();
-    }
-  }, [assetArray]);
+  // useEffect(() => {
+  //   if (assetArray.length > 3) {
+  //     updateToTakeProfit();
+  //   }
+  // }, [assetArray]);
 
   // if toTakeProfit equal or smaller then zero set take profit to true
   const updateTakeProfit = () => {
@@ -94,14 +94,14 @@ const TakeProfit = () => {
       <Typography variant="caption" gutterBottom>
         Nan
       </Typography>
-      {/* <Button
+      <Button
         onClick={() => {
+          setToTakeProfit(-1);
           setTakeProfit(true);
-          setToTakeProfit(toTakeProfit + 1);
         }}
       >
         Set toTakeProfit
-      </Button> */}
+      </Button>
       <BotInfoTable />
     </Box>
   );
