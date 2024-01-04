@@ -158,7 +158,6 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     .catch((error) => client.logger.error(error));
 
   // Find order and update on the database
-
   const updatedOrder = await BotOrder.findOneAndUpdate(
     { orderId: order.orderId },
     { $set: order },
@@ -174,6 +173,28 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
   //   },
   // };
   // this.placeOrder(request);
+
+  res.json(updatedOrder);
+});
+
+// check if stop order filled
+exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  // Fetch Stop order
+  let filledStopOrder = {};
+  await client
+    .marginOrder('BTCUSDT', {
+      origClientOrderId: 'xxwaqIhDz6E6VFsbRIzT9G',
+    })
+    .then((response) => (filledStopOrder = response.data))
+    .catch((error) => client.logger.error(error));
+
+  // Update order on database
+  const updatedOrder = await BotOrder.findOneAndUpdate(
+    { orderId: req.body.orderId },
+    { $set: { stopOrder: filledStopOrder } },
+    { new: true },
+  );
 
   res.json(updatedOrder);
 });

@@ -222,7 +222,6 @@ const BotActionInfo = () => {
   const [orderCount, setOrderCount] = useState(1);
 
   useEffect(() => {
-    //
     // Push order to orderArray, if it already exist update it
     if (order.orderId) {
       orderArray.map((item, index, array) => {

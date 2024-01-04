@@ -1,5 +1,6 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 import { useContext, useEffect, useState } from "react";
 
@@ -14,6 +15,7 @@ const IsStopOrderFilled = () => {
     isBotStarted,
     isStopped,
     setIsStopped,
+    setIsBotStarted,
   } = useContext(StrategyOneContext);
 
   const fetchStopOrder = () => {
@@ -26,6 +28,7 @@ const IsStopOrderFilled = () => {
       },
       body: JSON.stringify({
         pair: order.symbol,
+        orderId: order.orderId,
         origClientOrderId: order.stopOrder.clientOrderId,
       }),
     })
@@ -36,9 +39,10 @@ const IsStopOrderFilled = () => {
         return res.json();
       })
       .then((res) => {
-        if (res.status === "FILLED") {
-          setOrder({ ...order, stopOrder: res });
+        if (res.stopOrder.status === "FILLED") {
+          setOrder(res);
           setIsStopped(true);
+          setIsBotStarted(false);
         }
       })
       .catch((err) => {
@@ -73,6 +77,7 @@ const IsStopOrderFilled = () => {
           {isStopped ? "Order stopped!!!" : "Not stopped yet!!!"}
         </Typography>
       ) : null}
+      <Button onClick={fetchStopOrder}>Stop Order Fetch</Button>
     </Box>
   );
 };
