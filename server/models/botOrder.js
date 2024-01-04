@@ -34,7 +34,8 @@ const BotOrderSchema = new Schema({
   stopOrderPrice: { type: String },
   takeProfitPrice: { type: String },
   stopOrder: { type: mongoose.Schema.Types.Mixed },
-  resultOrder: { type: mongoose.Schema.Types.Mixed },
+  takeProfitOrder: { type: mongoose.Schema.Types.Mixed },
+  profitAndLoss: { type: Number },
 });
 
 module.exports = mongoose.model('BotOrder', BotOrderSchema);

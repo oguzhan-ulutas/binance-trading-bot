@@ -119,7 +119,7 @@ const TakeProfit = () => {
       </Typography>
       <IsStopOrderFilled />
 
-      <Button
+      {/* <Button
         onClick={() => {
           if (parseFloat(toTakeProfit) >= 0) {
             setToTakeProfit(-1);
@@ -131,7 +131,7 @@ const TakeProfit = () => {
         }}
       >
         Set toTakeProfit
-      </Button>
+      </Button> */}
       <BotInfoTable />
     </Box>
   );
