@@ -179,7 +179,6 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
 
 // check if stop order filled
 exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
   // Fetch Stop order
   let filledStopOrder = {};
   await client

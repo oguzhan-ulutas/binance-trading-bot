@@ -22,6 +22,7 @@ const TakeProfit = () => {
     setToTakeProfit,
     takeProfit,
     setTakeProfit,
+    setIsBotStarted,
   } = useContext(StrategyOneContext);
 
   const updateToTakeProfit = () => {
@@ -99,6 +100,18 @@ const TakeProfit = () => {
 
   return (
     <Box style={{ margin: "40px 0" }}>
+      <Button
+        variant="contained"
+        color="error"
+        size="large"
+        sx={{
+          fontSize: "25px",
+          margin: "20px",
+        }}
+        onClick={() => setIsBotStarted(false)}
+      >
+        Emergency Stop Bot Button
+      </Button>
       <Typography variant="h3" gutterBottom>
         To Take Profit : {toTakeProfit}
         <br />
