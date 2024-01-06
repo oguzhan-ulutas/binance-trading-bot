@@ -7,6 +7,7 @@ import { useState } from "react";
 function App() {
   const serverUrl = import.meta.env.VITE_serverUrl;
   const [userMarginData, setUserMarginData] = useState({});
+  const [errors, setErrors] = useState([]);
 
   // Set non-zero value assets as an array
   const userAssets = userMarginData.tradeEnabled
@@ -28,6 +29,8 @@ function App() {
         setUserMarginData,
         userAssets,
         assetsSymbolArray,
+        errors,
+        setErrors,
       }}
     >
       <Router />

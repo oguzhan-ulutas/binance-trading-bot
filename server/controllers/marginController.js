@@ -14,13 +14,18 @@ const client = new Spot(binanceApiKey, binanceApiSecretKey);
 
 exports.getUserData = asyncHandler(async (req, res, next) => {
   let userMarginData = {};
+  const errors = [];
   // Get margin user data
   await client
     .marginAccount()
     .then((response) => {
       userMarginData = { ...response.data };
     })
-    .catch((error) => client.logger.error(error));
+    .catch((error) => {
+      errors.push(error);
+      // console.log('Could not get userMArginData', error);
+      console.log('ERRORS', errors);
+    });
 
   // Filter zero value assets
   userMarginData = {
@@ -75,6 +80,7 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
       },
     });
   } catch (error) {
+    errors.push(error);
     console.log('Could not delete;', error);
   }
 
@@ -84,9 +90,10 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
   try {
     await marginData.save();
   } catch (error) {
+    errors.push(error);
     console.error(error);
   }
-  res.json(userMarginData);
+  res.json({ userMarginData, errors });
 });
 
 // Get historic margin balances

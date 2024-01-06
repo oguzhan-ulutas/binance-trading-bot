@@ -19,6 +19,8 @@ const GetAssetValue = () => {
     setAssetArray,
     isFetching,
     setIsFetching,
+    errors,
+    setErrors,
   } = useContext(StrategyOneContext);
 
   // Get asset value each second
@@ -35,8 +37,11 @@ const GetAssetValue = () => {
         },
         body: JSON.stringify({ asset }),
       });
+
       const result = await response.json();
+      console.log(result);
       await setAssetValue(parseFloat(result.price).toFixed(2));
+      await setErrors([...errors, ...result.errors]);
     } catch (error) {
       console.error("Error fetching data in GetAssetValue:", error);
     }

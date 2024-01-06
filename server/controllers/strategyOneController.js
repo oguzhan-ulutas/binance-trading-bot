@@ -17,14 +17,25 @@ const client = new Spot(binanceApiKey, binanceApiSecretKey);
 // Get asset price
 exports.getAssetValue = asyncHandler(async (req, res, next) => {
   let price = '';
-  await client.tickerPrice(req.body.asset).then((response) => (price = response.data.price));
-  res.json({ price });
+  const errors = [];
+  await client
+    .tickerPrice(req.body.asset)
+    .then((response) => (price = response.data.price))
+    .catch((error) => {
+      const errorObject = error.response.data;
+      errorObject.functionName = 'getAssetValue';
+      errorObject.url = '/margin/strategy-one/get-asset-value';
+      errors.push(errorObject);
+      console.log(error);
+    });
+  res.json({ price, errors });
 });
 
 // Place order
 exports.placeOrder = asyncHandler(async (req, res, next) => {
   console.log(req.body);
   let order = {};
+  const errors = [];
 
   // Place order on binance
   await client
@@ -40,7 +51,10 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     .then((response) => {
       order = response.data;
     })
-    .catch((error) => client.logger.error(error));
+    .catch((error) => {
+      errors.push(error);
+      res.json({ order, errors });
+    });
 
   // Get current BNB price and add it to order object
   await client
@@ -96,8 +110,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
 
   await client
     .newMarginOrder(
-      `${req.body.pair}`, // symbol
-      `${stopOrderSide}`,
+      req.body.pair, // symbol
+      stopOrderSide,
       'STOP_LOSS_LIMIT',
       {
         quantity: parseFloat(order.executedQty),
@@ -159,43 +173,45 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     })
     .catch((error) => client.logger.error(error));
 
-  // Get current BNB price and add it to order object
-  await client
-    .marginPairIndex('BNBUSDT')
-    .then((response) => {
-      order.takeProfitOrder.bnbPrice = response.data.price;
-    })
-    .catch((error) => client.logger.error(error));
+  if (order.takeProfitOrder.status === 'FILLED') {
+    // Get current BNB price and add it to order object
+    await client
+      .marginPairIndex('BNBUSDT')
+      .then((response) => {
+        order.takeProfitOrder.bnbPrice = response.data.price;
+      })
+      .catch((error) => client.logger.error(error));
 
-  // Calculate cumulative commission in bnb
-  const cumulativeBnbCommission = await order.fills.reduce(
-    (acc, fill) => acc + parseFloat(fill.commission),
-    0,
-  );
-  order.takeProfitOrder.cumulativeBnbCommission = cumulativeBnbCommission;
+    // Calculate cumulative commission in bnb
+    const cumulativeBnbCommission = await order.takeProfitOrder.fills.reduce(
+      (acc, fill) => acc + parseFloat(fill.commission),
+      0,
+    );
+    order.takeProfitOrder.cumulativeBnbCommission = cumulativeBnbCommission;
 
-  // Calculate commission in usdt
-  order.takeProfitOrder.cumulativeUsdtCommission =
-    parseFloat(order.bnbPrice) * parseFloat(order.cumulativeBnbCommission);
+    // Calculate commission in usdt
+    order.takeProfitOrder.cumulativeUsdtCommission =
+      parseFloat(order.bnbPrice) * parseFloat(order.cumulativeBnbCommission);
 
-  // Calculate executed qty in usdt
-  const executedQtyUsdt = await order.fills.reduce(
-    (acc, fill) => acc + parseFloat(fill.price) * parseFloat(fill.qty),
-    0,
-  );
-  order.takeProfitOrder.executedQtyUsdt = executedQtyUsdt;
+    // Calculate executed qty in usdt
+    const executedQtyUsdt = await order.takeProfitOrder.fills.reduce(
+      (acc, fill) => acc + parseFloat(fill.price) * parseFloat(fill.qty),
+      0,
+    );
+    order.takeProfitOrder.executedQtyUsdt = executedQtyUsdt;
 
-  // Calculate profit
-  order.profitAndLoss =
-    order.side === 'SELL'
-      ? parseFloat(order.cumulativeQuoteQty) -
-        parseFloat(order.takeProfitOrder.cumulativeQuoteQty) -
-        parseFloat(order.cumulativeUsdtCommission) -
-        parseFloat(order.takeProfitOrder.cumulativeUsdtCommission)
-      : parseFloat(order.takeProfitOrder.cumulativeQuoteQty) -
-        parseFloat(order.cumulativeQuoteQty) -
-        parseFloat(order.cumulativeUsdtCommission) -
-        parseFloat(order.takeProfitOrder.cumulativeUsdtCommission);
+    // Calculate profit
+    order.profitAndLoss =
+      order.side === 'BUY'
+        ? parseFloat(order.cumulativeQuoteQty) -
+          parseFloat(order.takeProfitOrder.cumulativeQuoteQty) -
+          parseFloat(order.cumulativeUsdtCommission) -
+          parseFloat(order.takeProfitOrder.cumulativeUsdtCommission)
+        : parseFloat(order.takeProfitOrder.cumulativeQuoteQty) -
+          parseFloat(order.cumulativeQuoteQty) -
+          parseFloat(order.cumulativeUsdtCommission) -
+          parseFloat(order.takeProfitOrder.cumulativeUsdtCommission);
+  }
 
   // Find order and update on the database
   const updatedOrder = await BotOrder.findOneAndUpdate(
@@ -207,21 +223,64 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
   res.json(updatedOrder);
 });
 
-// check if stop order filled
+// Check if stop order filled
 exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
+  // Find order
+  const order = await BotOrder.findOne({ orderId: req.body.orderId });
+
   // Fetch Stop order
-  let filledStopOrder = {};
   await client
-    .marginOrder('BTCUSDT', {
+    .marginOrder(req.body.pair, {
       origClientOrderId: 'xxwaqIhDz6E6VFsbRIzT9G',
     })
-    .then((response) => (filledStopOrder = response.data))
+    .then((response) => (order.filledStopOrder = response.data))
     .catch((error) => client.logger.error(error));
 
-  // Update order on database
+  if (order.filledStopOrder.status === 'FILLED') {
+    // Get current BNB price and add it to order object
+    await client
+      .marginPairIndex('BNBUSDT')
+      .then((response) => {
+        order.filledStopOrder.bnbPrice = response.data.price;
+      })
+      .catch((error) => client.logger.error(error));
+
+    // Calculate cumulative commission in bnb
+    const cumulativeBnbCommission = await order.filledStopOrder.fills.reduce(
+      (acc, fill) => acc + parseFloat(fill.commission),
+      0,
+    );
+    order.filledStopOrder.cumulativeBnbCommission = cumulativeBnbCommission;
+
+    // Calculate commission in usdt
+    order.filledStopOrder.cumulativeUsdtCommission =
+      parseFloat(order.filledStopOrder.bnbPrice) *
+      parseFloat(order.filledStopOrder.cumulativeBnbCommission);
+
+    // Calculate executed qty in usdt
+    const executedQtyUsdt = await order.filledStopOrder.fills.reduce(
+      (acc, fill) => acc + parseFloat(fill.price) * parseFloat(fill.qty),
+      0,
+    );
+    order.filledStopOrder.executedQtyUsdt = executedQtyUsdt;
+
+    // Calculate loss
+    order.profitAndLoss =
+      order.side === 'BUY'
+        ? parseFloat(order.cumulativeQuoteQty) -
+          parseFloat(order.filledStopOrder.cumulativeQuoteQty) -
+          parseFloat(order.cumulativeUsdtCommission) -
+          parseFloat(order.filledStopOrder.cumulativeUsdtCommission)
+        : parseFloat(order.filledStopOrder.cumulativeQuoteQty) -
+          parseFloat(order.cumulativeQuoteQty) -
+          parseFloat(order.cumulativeUsdtCommission) -
+          parseFloat(order.filledStopOrder.cumulativeUsdtCommission);
+  }
+
+  // Find order and update on the database
   const updatedOrder = await BotOrder.findOneAndUpdate(
-    { orderId: req.body.orderId },
-    { $set: { stopOrder: filledStopOrder } },
+    { orderId: order.orderId },
+    { $set: order },
     { new: true },
   );
 

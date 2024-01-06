@@ -6,7 +6,7 @@ import Body from "./Body";
 import "./Home.css";
 
 const Home = () => {
-  const { serverUrl, userMarginData, setUserMarginData } =
+  const { serverUrl, userMarginData, setUserMarginData, errors, setErrors } =
     useContext(BotContext);
 
   const fetchUserData = () => {
@@ -19,7 +19,9 @@ const Home = () => {
         return res.json();
       })
       .then((res) => {
-        setUserMarginData(res);
+        console.log(res.errors);
+        setUserMarginData(res.userMarginData);
+        setErrors([...errors, ...res.errors]);
       })
       .catch((err) => {
         console.log("User data fetch error in Home component: ", err);
