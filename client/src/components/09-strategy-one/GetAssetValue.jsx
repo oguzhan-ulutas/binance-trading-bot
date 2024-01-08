@@ -39,9 +39,11 @@ const GetAssetValue = () => {
       });
 
       const result = await response.json();
-      console.log(result);
+
       await setAssetValue(parseFloat(result.price).toFixed(2));
-      await setErrors([...errors, ...result.errors]);
+      if (result.errors.length) {
+        await setErrors([...errors, ...result.errors]);
+      }
     } catch (error) {
       console.error("Error fetching data in GetAssetValue:", error);
     }

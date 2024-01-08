@@ -38,7 +38,7 @@ router.post('/margin/trades', marginController.getTrades);
 router.post('/margin/strategy-one/get-asset-value', strategyOneController.getAssetValue);
 
 // Place order
-router.post('/margin/place-order', strategyOneController.placeOrder);
+router.post('/margin/strategy-one/place-order', strategyOneController.placeOrder);
 
 // Delete Stop Order
 router.post('/margin/take-profit', strategyOneController.takeProfit);

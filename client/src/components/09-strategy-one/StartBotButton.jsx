@@ -21,13 +21,14 @@ export default function StartBotButton() {
     placeOrder,
   } = React.useContext(StrategyOneContext);
 
-  const startButtonActions = () => {
-    console.log({ asset, side, orderType, orderQuantity });
-    setIsBotStarted(true);
-    placeOrder(asset, side, orderQuantity);
-  };
+  React.useEffect(() => {
+    if (isBotStarted) {
+      placeOrder(asset, side, orderQuantity);
+    }
+  }, [isBotStarted]);
 
   React.useEffect(() => {
+    // console.log("Set open use effect", { isFetching, isBotStarted });
     if (isFetching) {
       setOpen(false);
     } else {
@@ -60,10 +61,11 @@ export default function StartBotButton() {
         disabled={open}
         variant="outlined"
         onClick={() => {
+          // console.log("start button", { isFetching, isBotStarted });
           isFetching
             ? isBotStarted
               ? setIsBotStarted(false)
-              : startButtonActions()
+              : setIsBotStarted(true)
             : setOpen(true);
         }}
       >

@@ -12,7 +12,7 @@
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 import GetAssetValue from "./GetAssetValue";
@@ -118,36 +118,41 @@ const StrategyOne = () => {
   const [isStopped, setIsStopped] = useState(false);
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    console.log("StrategyOne useEffect", { isBotStarted });
+  }, [isBotStarted]);
+
   const placeOrder = (pair, side, quantity) => {
-    if (isBotStarted) {
-      const url = `${serverUrl}/margin/place-order`;
-      fetch(url, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ pair, side, quantity }),
+    console.log("Send place order req");
+    const url = `${serverUrl}/margin/strategy-one/place-order`;
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pair, side, quantity }),
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.status >= 400) {
+          setErrors([...errors, ...res.errors]);
+
+          throw new Error("server error");
+        }
+        return res.json();
       })
-        .then((res) => {
-          console.log(res);
-          if (res.status >= 400) {
-            console.log(res);
-            throw new Error("server error");
-          }
-          return res.json();
-        })
-        .then((res) => {
-          if (res.status === "FILLED") {
-            // setOrder(res);
-            console.log({ info: "Order Placed", order });
-          }
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log("Place order error: ", err);
-        });
-    }
+      .then((res) => {
+        if (res.status === "FILLED") {
+          setOrder(res.order);
+          console.log({ info: "Order Placed", order });
+        }
+        setErrors([...errors, ...res.errors]);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("Place order error: ", err);
+      });
   };
 
   return (

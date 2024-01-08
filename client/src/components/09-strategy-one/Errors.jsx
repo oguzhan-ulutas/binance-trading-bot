@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 
@@ -20,6 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Errors = () => {
   const { errors, setErrors } = useContext(StrategyOneContext);
+  console.log(errors);
 
   return (
     <>
@@ -40,10 +42,10 @@ const Errors = () => {
               overflow: "auto",
             }}
           >
-            {errors.map((item) => {
+            {errors.map((item, index) => {
               return (
                 <>
-                  <Item>
+                  <Item key={index}>
                     <Typography variant="caption" gutterBottom>
                       Code : {item.code} <br />
                       Message : {item.msg} <br />

@@ -52,7 +52,11 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       order = response.data;
     })
     .catch((error) => {
-      errors.push(error);
+      const errorObject = error.response.data;
+      errorObject.functionName = 'placeOrder';
+      errorObject.url = '/margin/strategy-one/place-order';
+      errors.push(errorObject);
+      console.log(error);
       res.json({ order, errors });
     });
 
@@ -62,7 +66,13 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     .then((response) => {
       order.bnbPrice = response.data.price;
     })
-    .catch((error) => client.logger.error(error));
+    .catch((error) => {
+      const errorObject = error.response.data;
+      errorObject.functionName = 'placeOrder - Fetch bnb price';
+      errorObject.url = '/margin/strategy-one/place-order';
+      errors.push(errorObject);
+      console.log(error);
+    });
 
   // Calculate cumulative commission in bnb
   const cumulativeBnbCommission = await order.fills.reduce(
@@ -124,7 +134,13 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     .then((response) => {
       order.stopOrder = response.data;
     })
-    .catch((error) => client.logger.error(error));
+    .catch((error) => {
+      const errorObject = error.response.data;
+      errorObject.functionName = 'placeOrder - place stop order';
+      errorObject.url = '/margin/strategy-one/place-order';
+      errors.push(errorObject);
+      console.log(error);
+    });
 
   // Create new BotOrder Instance
   const orderInstance = new BotOrder(order);
@@ -133,10 +149,15 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     const savedOrder = await orderInstance.save();
     console.log('Order saved successfully:', savedOrder);
   } catch (error) {
+    const errorObject = error.response.data;
+    errorObject.functionName = 'placeOrder';
+    errorObject.url = '/margin/strategy-one/place-order - Saved order';
+    errors.push(errorObject);
+
     console.error('Error saving order:', error);
   }
-
-  res.json(orderInstance);
+  console.log('ERRORS---->', errors);
+  res.json({ order: orderInstance, errors });
 });
 
 // Delete stop order and take profit
