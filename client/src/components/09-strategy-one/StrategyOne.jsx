@@ -118,10 +118,6 @@ const StrategyOne = () => {
   const [isStopped, setIsStopped] = useState(false);
   const [errors, setErrors] = useState([]);
 
-  useEffect(() => {
-    console.log("StrategyOne useEffect", { isBotStarted });
-  }, [isBotStarted]);
-
   const placeOrder = (pair, side, quantity) => {
     console.log("Send place order req");
     const url = `${serverUrl}/margin/strategy-one/place-order`;
@@ -136,19 +132,19 @@ const StrategyOne = () => {
       .then((res) => {
         console.log(res);
         if (res.status >= 400) {
-          setErrors([...errors, ...res.errors]);
-
-          throw new Error("server error");
+          const response = res.json();
+          setErrors([...errors, ...response.errors]);
+          return;
         }
         return res.json();
       })
       .then((res) => {
-        if (res.status === "FILLED") {
-          setOrder(res.order);
-          console.log({ info: "Order Placed", order });
+        setOrder(res.order);
+        console.log({ info: "Order Placed", order });
+
+        if (res.errors.length) {
+          setErrors([...errors, ...res.errors]);
         }
-        setErrors([...errors, ...res.errors]);
-        console.log(res);
       })
       .catch((err) => {
         console.log("Place order error: ", err);
@@ -188,10 +184,7 @@ const StrategyOne = () => {
         setErrors,
       }}
     >
-      <Divider style={{ margin: "20px 0" }} />
-
       <Errors />
-
       <Divider style={{ margin: "20px 0" }} />
 
       <GetAssetValue />

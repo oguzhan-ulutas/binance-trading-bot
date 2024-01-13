@@ -86,7 +86,7 @@ export default function BalanceHistoryChart() {
                   },
                 },
               ]}
-              width={1000}
+              width={1100}
               height={500}
               yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
               rightAxis="rightAxisId"

@@ -23,6 +23,8 @@ const TakeProfit = () => {
     takeProfit,
     setTakeProfit,
     setIsBotStarted,
+    errors,
+    setErrors,
   } = useContext(StrategyOneContext);
 
   const updateToTakeProfit = () => {
@@ -31,7 +33,7 @@ const TakeProfit = () => {
         (
           parseFloat(order.takeProfitPrice) -
           parseFloat(assetArray[assetArray.length - 1])
-        ).toFixed(2)
+        ).toFixed(3)
       );
     }
 
@@ -40,7 +42,7 @@ const TakeProfit = () => {
         (
           parseFloat(assetArray[assetArray.length - 1]) -
           parseFloat(order.takeProfitPrice)
-        ).toFixed(2)
+        ).toFixed(3)
       );
     }
   };
@@ -67,7 +69,7 @@ const TakeProfit = () => {
   useEffect(() => {
     console.log(takeProfit);
     if (takeProfit === true) {
-      const url = `${serverUrl}/margin/take-profit`;
+      const url = `${serverUrl}/margin/strategy-one/take-profit`;
       fetch(url, {
         method: "POST",
         mode: "cors",
@@ -82,12 +84,14 @@ const TakeProfit = () => {
       })
         .then((res) => {
           if (res.status >= 400) {
-            throw new Error("server error");
+            const response = res.json();
+            setErrors([...errors, ...response.errors]);
+            return;
           }
           return res.json();
         })
         .then((res) => {
-          setOrder(res);
+          setOrder(res.order);
           setTakeProfit(false);
           // Placing new order after taking profit
           placeOrder(asset, side, orderQuantity);
@@ -132,6 +136,7 @@ const TakeProfit = () => {
       >
         Set toTakeProfit
       </Button> */}
+
       <BotInfoTable />
     </Box>
   );

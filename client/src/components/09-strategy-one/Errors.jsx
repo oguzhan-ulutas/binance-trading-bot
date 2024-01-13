@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, Fragment } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { StrategyOneContext } from "./StrategyOneContext";
@@ -23,12 +23,25 @@ const Errors = () => {
   const { errors, setErrors } = useContext(StrategyOneContext);
   console.log(errors);
 
+  // Add id to errors
+  useEffect(() => {
+    errors.map((error) => {
+      if (!error.id) {
+        error.id = uuidv4();
+      }
+    });
+  }, [errors.length]);
+
   return (
     <>
       {errors.length ? (
-        <Box>
-          <h2>ERRORS</h2>
-          <Button onClick={() => setErrors([])} variant="contained">
+        <Box key="errors-div">
+          <h2 key="errors-header">ERRORS</h2>
+          <Button
+            key="error-clear-button"
+            onClick={() => setErrors([])}
+            variant="contained"
+          >
             Clear Errors
           </Button>
 
@@ -42,10 +55,10 @@ const Errors = () => {
               overflow: "auto",
             }}
           >
-            {errors.map((item, index) => {
+            {errors.map((item) => {
               return (
-                <>
-                  <Item key={index}>
+                <Fragment key={item.id}>
+                  <Item>
                     <Typography variant="caption" gutterBottom>
                       Code : {item.code} <br />
                       Message : {item.msg} <br />
@@ -53,7 +66,7 @@ const Errors = () => {
                       Url : {item.url} <br />
                     </Typography>
                   </Item>
-                </>
+                </Fragment>
               );
             })}
           </Stack>

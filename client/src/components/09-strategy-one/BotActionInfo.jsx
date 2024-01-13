@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Fragment } from "react";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 
@@ -225,6 +225,12 @@ const BotActionInfo = () => {
   useEffect(() => {
     // Push order to orderArray, if it already exist update it
     if (order.orderId) {
+      console.log("inside order.OrderId");
+      if (!orderArray.length) {
+        const newItem = { orderCount, order };
+        setOrderCount(orderCount + 1);
+        setOrderArray([...orderArray, newItem]);
+      }
       orderArray.map((item, index, array) => {
         if (item.order.orderId === order.orderId) {
           array[index] = { orderCount: item.orderCount, order };
@@ -253,9 +259,13 @@ const BotActionInfo = () => {
         {orderArray.length ? (
           orderArray.map((item) => {
             return (
-              <>
-                <Item key={item.order.clientOrderId}>
-                  <Typography variant="caption" gutterBottom>
+              <Fragment key={item.order.clientOrderId}>
+                <Item>
+                  <Typography
+                    key={item.order.clientOrderId}
+                    variant="caption"
+                    gutterBottom
+                  >
                     <strong>Order Number: {item.orderCount}</strong> <br />
                     Pair : {item.order.symbol} <br />
                     Order Status : {item.order.status} <br />
@@ -268,7 +278,7 @@ const BotActionInfo = () => {
                     Profit and Loss : {item.order.profitAndLoss} <br />
                   </Typography>
                 </Item>
-              </>
+              </Fragment>
             );
           })
         ) : (

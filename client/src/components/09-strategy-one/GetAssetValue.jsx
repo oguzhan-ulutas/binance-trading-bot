@@ -40,7 +40,7 @@ const GetAssetValue = () => {
 
       const result = await response.json();
 
-      await setAssetValue(parseFloat(result.price).toFixed(2));
+      await setAssetValue(parseFloat(result.price).toFixed(3));
       if (result.errors.length) {
         await setErrors([...errors, ...result.errors]);
       }

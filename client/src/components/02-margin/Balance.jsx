@@ -52,14 +52,14 @@ const Balance = ({ fetchUserData }) => {
 
   return (
     <div className="balance-margin">
-      <Typography variant="h4" gutterBottom>
+      <Typography key="balance-header" variant="h4" gutterBottom>
         MARGIN
         <br /> {calculateTarget()}
         <br /> Margin Level: {parseFloat(userMarginData.marginLevel).toFixed(2)}
       </Typography>
 
       {userMarginData.totalCollateralValueInUSDT ? (
-        <Box className="header-info">
+        <Box key="header-balance" className="header-info">
           <Box className="header-balance">
             <Typography variant="h6" gutterBottom>
               Tolal Balance: <br />{" "}
@@ -71,7 +71,7 @@ const Balance = ({ fetchUserData }) => {
             </Button>
           </Box>
 
-          <Box className="header-dept">
+          <Box key="header-dept" className="header-dept">
             <Typography variant="h7" gutterBottom>
               Tolal Dept: <br />{" "}
               {parseFloat(
@@ -83,7 +83,7 @@ const Balance = ({ fetchUserData }) => {
             </Typography>
           </Box>
 
-          <Box className="header-borrowed">
+          <Box key="header-borrowed" className="header-borrowed">
             <Typography variant="h7" gutterBottom>
               Borrowed Assets: <br />{" "}
               {borrowed.length > 0

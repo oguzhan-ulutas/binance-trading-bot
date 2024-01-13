@@ -115,7 +115,7 @@ const PercentageDailyCharts = ({ dates }) => {
                   color: "#FF9900",
                 },
               ]}
-              width={1000}
+              width={1100}
               height={500}
               yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
               rightAxis="rightAxisId"

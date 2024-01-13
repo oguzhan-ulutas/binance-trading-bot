@@ -72,6 +72,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       errorObject.url = '/margin/strategy-one/place-order';
       errors.push(errorObject);
       console.log(error);
+      res.json({ order, errors });
     });
 
   // Calculate cumulative commission in bnb
@@ -90,20 +91,20 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     (acc, fill) => acc + parseFloat(fill.price) * parseFloat(fill.qty),
     0,
   );
-  order.executedQtyUsdt = executedQtyUsdt.toFixed(2);
+  order.executedQtyUsdt = executedQtyUsdt.toFixed(3);
 
   // Calculate entryPrice
-  order.entryPrice = (parseFloat(order.executedQtyUsdt) / parseFloat(order.executedQty)).toFixed(2);
+  order.entryPrice = (parseFloat(order.executedQtyUsdt) / parseFloat(order.executedQty)).toFixed(3);
 
   // Calculate stop and take profit price
   const stopOrderPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(2)
-      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(2);
+      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3)
+      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3);
   const takeProfitPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(2)
-      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(2);
+      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3)
+      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3);
 
   order.stopOrderPrice = stopOrderPrice;
   order.takeProfitPrice = takeProfitPrice;
@@ -115,8 +116,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   const stopOrderSide = req.body.side === 'BUY' ? 'SELL' : 'BUY';
   const price =
     stopOrderSide === 'SELL'
-      ? parseFloat(order.stopOrderPrice).toFixed(2) * 0.9
-      : parseFloat(order.stopOrderPrice).toFixed(2) * 1.1;
+      ? parseFloat(order.stopOrderPrice).toFixed(3) * 0.9
+      : parseFloat(order.stopOrderPrice).toFixed(3) * 1.1;
 
   await client
     .newMarginOrder(
@@ -126,8 +127,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       {
         quantity: parseFloat(order.executedQty),
         newOrderRespType: 'FULL',
-        stopPrice: parseFloat(order.stopOrderPrice).toFixed(2),
-        price: parseFloat(price).toFixed(2),
+        stopPrice: parseFloat(order.stopOrderPrice).toFixed(3),
+        price: parseFloat(price).toFixed(3),
         timeInForce: 'GTC',
       },
     )
@@ -140,6 +141,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       errorObject.url = '/margin/strategy-one/place-order';
       errors.push(errorObject);
       console.log(error);
+      res.json({ order, errors });
     });
 
   // Create new BotOrder Instance
@@ -155,8 +157,9 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     errors.push(errorObject);
 
     console.error('Error saving order:', error);
+    res.json({ order: orderInstance, errors });
   }
-  console.log('ERRORS---->', errors);
+  console.log({ order: orderInstance, errors });
   res.json({ order: orderInstance, errors });
 });
 
@@ -164,6 +167,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
 exports.takeProfit = asyncHandler(async (req, res, next) => {
   // Find order
   const order = await BotOrder.findOne({ orderId: req.body.orderId });
+  const errors = [];
 
   // Cancel stop order
   await client
@@ -174,7 +178,14 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
       },
     )
     .then((response) => (order.stopOrder = response.data))
-    .catch((error) => client.logger.error(error));
+    .catch((error) => {
+      const errorObject = error.response.data;
+      errorObject.functionName = 'takeProfit - cancel stop order';
+      errorObject.url = '/margin/strategy-one/take-profit';
+      errors.push(errorObject);
+      console.log(error);
+      res.json({ order, errors });
+    });
 
   // Open Take Profit order
   const orderSide = order.side === 'BUY' ? 'SELL' : 'BUY';
@@ -192,7 +203,14 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     .then((response) => {
       order.takeProfitOrder = response.data;
     })
-    .catch((error) => client.logger.error(error));
+    .catch((error) => {
+      const errorObject = error.response.data;
+      errorObject.functionName = 'takeProfit - open take profit order';
+      errorObject.url = '/margin/strategy-one/take-profit';
+      errors.push(errorObject);
+      console.log(error);
+      res.json({ order, errors });
+    });
 
   if (order.takeProfitOrder.status === 'FILLED') {
     // Get current BNB price and add it to order object
@@ -241,7 +259,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     { new: true },
   );
 
-  res.json(updatedOrder);
+  res.json({ order: updatedOrder, errors });
 });
 
 // Check if stop order filled
