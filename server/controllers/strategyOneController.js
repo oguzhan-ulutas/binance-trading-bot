@@ -152,6 +152,10 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     )
     .then((response) => {
       order.stopOrder = response.data;
+      if (response.status < 400) {
+        const message = { msgId: uuidv4(), msg: 'Stop order placed.', functionName: 'placeOrder' };
+        messages.push(message);
+      }
     })
     .catch((error) => {
       const errorObject = error.response.data;
@@ -167,7 +171,14 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
 
   try {
     const savedOrder = await orderInstance.save();
-    console.log('Order saved successfully:', savedOrder);
+    if (savedOrder) {
+      const message = {
+        msgId: uuidv4(),
+        msg: 'Order saved to data base.',
+        functionName: 'placeOrder',
+      };
+      messages.push(message);
+    }
   } catch (error) {
     const errorObject = error.response.data;
     errorObject.functionName = 'placeOrder';
@@ -186,6 +197,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
   // Find order
   const order = await BotOrder.findOne({ orderId: req.body.orderId });
   const errors = [];
+  const messages = [];
 
   // Cancel stop order
   await client
@@ -195,7 +207,17 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
         orderId: req.body.stopOrderId,
       },
     )
-    .then((response) => (order.stopOrder = response.data))
+    .then((response) => {
+      order.stopOrder = response.data;
+      if (response.status < 400) {
+        const message = {
+          msgId: uuidv4(),
+          msg: 'Stop order cancelled',
+          functionName: 'takeProfit',
+        };
+        messages.push(message);
+      }
+    })
     .catch((error) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'takeProfit - cancel stop order';
@@ -220,6 +242,14 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     )
     .then((response) => {
       order.takeProfitOrder = response.data;
+      if (response.status < 400) {
+        const message = {
+          msgId: uuidv4(),
+          msg: 'Take profit order placed.',
+          functionName: 'takeProfit',
+        };
+        messages.push(message);
+      }
     })
     .catch((error) => {
       const errorObject = error.response.data;
@@ -277,11 +307,21 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     { new: true },
   );
 
-  res.json({ order: updatedOrder, errors });
+  if (updatedOrder) {
+    const message = {
+      msgId: uuidv4(),
+      msg: 'Profit taken, and order saved the database.',
+      functionName: 'takeProfit',
+    };
+    messages.push(message);
+  }
+
+  res.json({ order: updatedOrder, errors, messages });
 });
 
 // Check if stop order filled
 exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
+  const messages = [];
   // Find order
   const order = await BotOrder.findOne({ orderId: req.body.orderId });
 
@@ -332,6 +372,14 @@ exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
           parseFloat(order.cumulativeQuoteQty) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.filledStopOrder.cumulativeUsdtCommission);
+
+    // Add message
+    const message = {
+      msgId: uuidv4(),
+      msg: 'POSITION STOPPED.',
+      functionName: 'isStopOrderFilled',
+    };
+    messages.push(message);
   }
 
   // Find order and update on the database
@@ -341,5 +389,5 @@ exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
     { new: true },
   );
 
-  res.json(updatedOrder);
+  res.json({ order: updatedOrder, messages });
 });

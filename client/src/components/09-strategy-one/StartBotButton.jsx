@@ -42,7 +42,7 @@ export default function StartBotButton() {
 
   // Set messages for isBotStarted
   React.useEffect(() => {
-    isBotStarted
+    isBotStarted && isFetching
       ? setMessages([
           ...messages,
           {
@@ -51,14 +51,16 @@ export default function StartBotButton() {
             functionName: "StartBotButton",
           },
         ])
-      : setMessages([
+      : isFetching
+      ? setMessages([
           ...messages,
           {
             msgId: uuidv4(),
             msg: "Bot stopped.",
             functionName: "StartBotButton",
           },
-        ]);
+        ])
+      : null;
   }, [isBotStarted]);
 
   return (

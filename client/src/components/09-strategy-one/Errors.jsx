@@ -21,7 +21,6 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Errors = () => {
   const { errors, setErrors } = useContext(StrategyOneContext);
-  console.log(errors);
 
   // Add id to errors
   useEffect(() => {

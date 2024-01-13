@@ -22,6 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const BotMessages = () => {
   const { messages } = useContext(StrategyOneContext);
+  console.log(messages);
 
   return (
     <Box sx={{ width: "100%" }}>
