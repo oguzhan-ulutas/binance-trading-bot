@@ -8,6 +8,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 
+import { v4 as uuidv4 } from "uuid";
+
 export default function StartBotButton() {
   const [open, setOpen] = React.useState(null);
   const {
@@ -20,6 +22,8 @@ export default function StartBotButton() {
     orderQuantity,
     placeOrder,
     takeProfit,
+    messages,
+    setMessages,
   } = React.useContext(StrategyOneContext);
 
   React.useEffect(() => {
@@ -35,6 +39,27 @@ export default function StartBotButton() {
       setOpen(true);
     }
   }, [isFetching]);
+
+  // Set messages for isBotStarted
+  React.useEffect(() => {
+    isBotStarted
+      ? setMessages([
+          ...messages,
+          {
+            msgId: uuidv4(),
+            msg: "Bot started.",
+            functionName: "StartBotButton",
+          },
+        ])
+      : setMessages([
+          ...messages,
+          {
+            msgId: uuidv4(),
+            msg: "Bot stopped.",
+            functionName: "StartBotButton",
+          },
+        ]);
+  }, [isBotStarted]);
 
   return (
     <Box sx={{ width: "100%" }}>

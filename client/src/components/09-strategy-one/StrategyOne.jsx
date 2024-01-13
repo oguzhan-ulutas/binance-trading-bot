@@ -13,6 +13,7 @@ import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 import GetAssetValue from "./GetAssetValue";
@@ -118,9 +119,7 @@ const StrategyOne = () => {
   const [takeProfit, setTakeProfit] = useState(false); // false
   const [isStopped, setIsStopped] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [messages, setMessages] = useState([
-    { msgId: "1", msg: "helooo", functionName: "func" },
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const placeOrder = (pair, side, quantity) => {
     console.log("Send place order req");

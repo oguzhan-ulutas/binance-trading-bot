@@ -19,9 +19,21 @@ const client = new Spot(binanceApiKey, binanceApiSecretKey);
 exports.getAssetValue = asyncHandler(async (req, res, next) => {
   let price = '';
   const errors = [];
+  const messages = [];
+
   await client
     .tickerPrice(req.body.asset)
-    .then((response) => (price = response.data.price))
+    .then((response) => {
+      price = response.data.price;
+      if (response.status < 400) {
+        const message = {
+          msgId: uuidv4(),
+          msg: 'Fetch asset value started.',
+          functionName: 'getAssetValue',
+        };
+        messages.push(message);
+      }
+    })
     .catch((error) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'getAssetValue';
@@ -29,7 +41,7 @@ exports.getAssetValue = asyncHandler(async (req, res, next) => {
       errors.push(errorObject);
       console.log(error);
     });
-  res.json({ price, errors });
+  res.json({ price, errors, messages });
 });
 
 // Place order

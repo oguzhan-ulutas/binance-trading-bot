@@ -45,6 +45,11 @@ const GetAssetValue = () => {
       const result = await response.json();
 
       await setAssetValue(parseFloat(result.price).toFixed(3));
+
+      if (!messages.length && isFetching) {
+        setMessages([...messages, ...result.messages]);
+      }
+
       if (result.errors.length) {
         await setErrors([...errors, ...result.errors]);
       }
@@ -58,35 +63,39 @@ const GetAssetValue = () => {
       // Start fetching data if isFetching is true
       const intervalId = setInterval(() => {
         fetchAssetValue();
-        // Add fetch started msg
       }, 1000);
-      // setMessages([
-      //   ...messages,
-      //   {
-      //     msgId: uuidv4(),
-      //     msg: "Fetch asset value started",
-      //     functionName: "GetAssetValue",
-      //   },
-      // ]);
 
       // Clean up the interval on component unmount
-      return () => {
-        clearInterval(intervalId);
-        // setMessages([
-        //   ...messages,
-        //   {
-        //     msgId: uuidv4(),
-        //     msg: "Fetch asset value stopped",
-        //     functionName: "GetAssetValue",
-        //   },
-        // ]);
-      };
+      return () => clearInterval(intervalId);
     }
   }, [isFetching]);
 
   useEffect(() => {
     setAssetArray([...assetArray, parseFloat(assetValue)]);
   }, [assetValue]);
+
+  // Set messages for fetching
+  useEffect(() => {
+    isFetching && messages.length
+      ? setMessages([
+          ...messages,
+          {
+            msgId: uuidv4(),
+            msg: "Fetch asset value started.",
+            functionName: "GetAssetValue",
+          },
+        ])
+      : messages.length
+      ? setMessages([
+          ...messages,
+          {
+            msgId: uuidv4(),
+            msg: "Fetch asset value stopped.",
+            functionName: "GetAssetValue",
+          },
+        ])
+      : null;
+  }, [isFetching]);
 
   return (
     <Box className="startegy-one">
