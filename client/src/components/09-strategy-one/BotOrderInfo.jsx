@@ -246,7 +246,7 @@ const BotActionInfo = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <h2>Bot Actions</h2>
+      <h2>Bot Orders</h2>
       <Stack
         spacing={2}
         divider={<Divider flexItem />}

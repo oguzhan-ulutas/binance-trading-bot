@@ -5,6 +5,8 @@ import TextField from "@mui/material/TextField";
 
 import { useContext, useEffect } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { StrategyOneContext } from "./StrategyOneContext";
 import "./GetAssetValue.css";
 
@@ -21,6 +23,8 @@ const GetAssetValue = () => {
     setIsFetching,
     errors,
     setErrors,
+    messages,
+    setMessages,
   } = useContext(StrategyOneContext);
 
   // Get asset value each second
@@ -54,10 +58,29 @@ const GetAssetValue = () => {
       // Start fetching data if isFetching is true
       const intervalId = setInterval(() => {
         fetchAssetValue();
+        // Add fetch started msg
       }, 1000);
+      // setMessages([
+      //   ...messages,
+      //   {
+      //     msgId: uuidv4(),
+      //     msg: "Fetch asset value started",
+      //     functionName: "GetAssetValue",
+      //   },
+      // ]);
 
       // Clean up the interval on component unmount
-      return () => clearInterval(intervalId);
+      return () => {
+        clearInterval(intervalId);
+        // setMessages([
+        //   ...messages,
+        //   {
+        //     msgId: uuidv4(),
+        //     msg: "Fetch asset value stopped",
+        //     functionName: "GetAssetValue",
+        //   },
+        // ]);
+      };
     }
   }, [isFetching]);
 

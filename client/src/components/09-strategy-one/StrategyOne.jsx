@@ -17,10 +17,11 @@ import { useEffect, useState } from "react";
 import { StrategyOneContext } from "./StrategyOneContext";
 import GetAssetValue from "./GetAssetValue";
 import PlaceOrder from "./PlaceOrder";
-import BotActionInfo from "./BotActionInfo";
+import BotActionInfo from "./BotOrderInfo";
 import "./StrategyOne.css";
 import TakeProfit from "./TakeProfit";
 import Errors from "./Errors";
+import BotMessages from "./BotMessages";
 
 const StrategyOne = () => {
   const serverUrl = import.meta.env.VITE_serverUrl;
@@ -117,6 +118,9 @@ const StrategyOne = () => {
   const [takeProfit, setTakeProfit] = useState(false); // false
   const [isStopped, setIsStopped] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [messages, setMessages] = useState([
+    { msgId: "1", msg: "helooo", functionName: "func" },
+  ]);
 
   const placeOrder = (pair, side, quantity) => {
     console.log("Send place order req");
@@ -140,7 +144,7 @@ const StrategyOne = () => {
       })
       .then((res) => {
         setOrder(res.order);
-        console.log({ info: "Order Placed", order });
+        setMessages([...messages, res.messages]);
 
         if (res.errors.length) {
           setErrors([...errors, ...res.errors]);
@@ -182,6 +186,8 @@ const StrategyOne = () => {
         setIsStopped,
         errors,
         setErrors,
+        messages,
+        setMessages,
       }}
     >
       <Errors />
@@ -195,6 +201,8 @@ const StrategyOne = () => {
         <PlaceOrder />
         <Divider orientation="vertical" flexItem />
         <BotActionInfo />
+        <Divider orientation="vertical" flexItem />
+        <BotMessages />
       </div>
 
       <TakeProfit />

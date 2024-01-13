@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Spot = require('@binance/connector/src/spot');
 require('dotenv').config();
+const { v4: uuidv4 } = require('uuid');
 
 // const { response } = require('express');
 const Margin = require('../models/margin');
@@ -36,6 +37,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   console.log(req.body);
   let order = {};
   const errors = [];
+  const messages = [];
 
   // Place order on binance
   await client
@@ -50,6 +52,10 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     )
     .then((response) => {
       order = response.data;
+      if (response.status < 400) {
+        const message = { msgId: uuidv4(), msg: 'Order Placed', functionName: 'placeOrder' };
+        messages.push(message);
+      }
     })
     .catch((error) => {
       const errorObject = error.response.data;
@@ -159,8 +165,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     console.error('Error saving order:', error);
     res.json({ order: orderInstance, errors });
   }
-  console.log({ order: orderInstance, errors });
-  res.json({ order: orderInstance, errors });
+  console.log({ order: orderInstance, errors, messages });
+  res.json({ order: orderInstance, errors, messages });
 });
 
 // Delete stop order and take profit
