@@ -38,6 +38,7 @@ exports.getAssetValue = asyncHandler(async (req, res, next) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'getAssetValue';
       errorObject.url = '/margin/strategy-one/get-asset-value';
+      errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
     });
@@ -46,7 +47,6 @@ exports.getAssetValue = asyncHandler(async (req, res, next) => {
 
 // Place order
 exports.placeOrder = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
   let order = {};
   const errors = [];
   const messages = [];
@@ -65,7 +65,11 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     .then((response) => {
       order = response.data;
       if (response.status < 400) {
-        const message = { msgId: uuidv4(), msg: 'Order Placed', functionName: 'placeOrder' };
+        const message = {
+          msgId: uuidv4(),
+          msg: 'Order Placed',
+          functionName: 'placeOrder - Place order on binance',
+        };
         messages.push(message);
       }
     })
@@ -73,6 +77,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'placeOrder';
       errorObject.url = '/margin/strategy-one/place-order';
+      errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
       res.json({ order, errors });
@@ -88,6 +93,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'placeOrder - Fetch bnb price';
       errorObject.url = '/margin/strategy-one/place-order';
+      errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
       res.json({ order, errors });
@@ -117,12 +123,12 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   // Calculate stop and take profit price
   const stopOrderPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3)
-      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3);
+      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.002).toFixed(3)
+      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.002).toFixed(3);
   const takeProfitPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3)
-      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3);
+      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.002).toFixed(3)
+      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.002).toFixed(3);
 
   order.stopOrderPrice = stopOrderPrice;
   order.takeProfitPrice = takeProfitPrice;
@@ -134,8 +140,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   const stopOrderSide = req.body.side === 'BUY' ? 'SELL' : 'BUY';
   const price =
     stopOrderSide === 'SELL'
-      ? parseFloat(order.stopOrderPrice).toFixed(3) * 0.9
-      : parseFloat(order.stopOrderPrice).toFixed(3) * 1.1;
+      ? parseFloat(order.stopOrderPrice).toFixed(2) * 0.9
+      : parseFloat(order.stopOrderPrice).toFixed(2) * 1.1;
 
   await client
     .newMarginOrder(
@@ -145,15 +151,19 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       {
         quantity: parseFloat(order.executedQty),
         newOrderRespType: 'FULL',
-        stopPrice: parseFloat(order.stopOrderPrice).toFixed(3),
-        price: parseFloat(price).toFixed(3),
+        stopPrice: parseFloat(order.stopOrderPrice).toFixed(2),
+        price: parseFloat(price).toFixed(2),
         timeInForce: 'GTC',
       },
     )
     .then((response) => {
       order.stopOrder = response.data;
       if (response.status < 400) {
-        const message = { msgId: uuidv4(), msg: 'Stop order placed.', functionName: 'placeOrder' };
+        const message = {
+          msgId: uuidv4(),
+          msg: 'Stop order placed.',
+          functionName: 'placeOrder - Place stop order',
+        };
         messages.push(message);
       }
     })
@@ -161,6 +171,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'placeOrder - place stop order';
       errorObject.url = '/margin/strategy-one/place-order';
+      errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
       res.json({ order, errors });
@@ -175,7 +186,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       const message = {
         msgId: uuidv4(),
         msg: 'Order saved to data base.',
-        functionName: 'placeOrder',
+        functionName: 'placeOrder - Create new order instance',
       };
       messages.push(message);
     }
@@ -183,12 +194,13 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     const errorObject = error.response.data;
     errorObject.functionName = 'placeOrder';
     errorObject.url = '/margin/strategy-one/place-order - Saved order';
+    errorObject.id = uuidv4();
     errors.push(errorObject);
 
     console.error('Error saving order:', error);
     res.json({ order: orderInstance, errors });
   }
-  console.log({ order: orderInstance, errors, messages });
+
   res.json({ order: orderInstance, errors, messages });
 });
 
@@ -213,7 +225,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
         const message = {
           msgId: uuidv4(),
           msg: 'Stop order cancelled',
-          functionName: 'takeProfit',
+          functionName: 'takeProfit - Cancel stop order',
         };
         messages.push(message);
       }
@@ -222,6 +234,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'takeProfit - cancel stop order';
       errorObject.url = '/margin/strategy-one/take-profit';
+      errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
       res.json({ order, errors });
@@ -242,11 +255,13 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     )
     .then((response) => {
       order.takeProfitOrder = response.data;
+      console.log('resp', response.data);
+      console.log('takeProfit ', order);
       if (response.status < 400) {
         const message = {
           msgId: uuidv4(),
           msg: 'Take profit order placed.',
-          functionName: 'takeProfit',
+          functionName: 'takeProfit - Open Take Profit order.',
         };
         messages.push(message);
       }
@@ -255,6 +270,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
       const errorObject = error.response.data;
       errorObject.functionName = 'takeProfit - open take profit order';
       errorObject.url = '/margin/strategy-one/take-profit';
+      errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
       res.json({ order, errors });
@@ -290,12 +306,12 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     // Calculate profit
     order.profitAndLoss =
       order.side === 'BUY'
-        ? parseFloat(order.cumulativeQuoteQty) -
-          parseFloat(order.takeProfitOrder.cumulativeQuoteQty) -
+        ? parseFloat(order.executedQtyUsdt) -
+          parseFloat(order.takeProfitOrder.executedQty) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.takeProfitOrder.cumulativeUsdtCommission)
-        : parseFloat(order.takeProfitOrder.cumulativeQuoteQty) -
-          parseFloat(order.cumulativeQuoteQty) -
+        : parseFloat(order.takeProfitOrder.executedQtyUsdt) -
+          parseFloat(order.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.takeProfitOrder.cumulativeUsdtCommission);
   }
@@ -311,7 +327,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     const message = {
       msgId: uuidv4(),
       msg: 'Profit taken, and order saved the database.',
-      functionName: 'takeProfit',
+      functionName: 'takeProfit - Find order and update on the database',
     };
     messages.push(message);
   }
@@ -322,56 +338,62 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
 // Check if stop order filled
 exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
   const messages = [];
+  const errors = [];
   // Find order
   const order = await BotOrder.findOne({ orderId: req.body.orderId });
 
-  // Fetch Stop order
+  // Fetch stop order
   await client
     .marginOrder(req.body.pair, {
-      origClientOrderId: 'xxwaqIhDz6E6VFsbRIzT9G',
+      origClientOrderId: order.stopOrder.clientOrderId,
     })
-    .then((response) => (order.filledStopOrder = response.data))
-    .catch((error) => client.logger.error(error));
+    .then((response) => {
+      order.stopOrder = response.data;
+      if (response.status < 400) {
+        const message = {
+          msgId: uuidv4(),
+          msg: 'Filled stop order fetched.',
+          functionName: 'isStopOrderFilled - Fetch stop order.',
+        };
+        messages.push(message);
+      }
+    })
+    .catch((error) => {
+      const errorObject = error.response.data;
+      errorObject.functionName = 'isStopOrderFilled - Fetch stop order';
+      errorObject.url = '/margin/strategy-one/take-profit';
+      errorObject.id = uuidv4();
+      errors.push(errorObject);
+      console.log(error);
+      res.json({ order, errors });
+    });
 
-  if (order.filledStopOrder.status === 'FILLED') {
+  if (order.stopOrder.status === 'FILLED') {
     // Get current BNB price and add it to order object
-    await client
-      .marginPairIndex('BNBUSDT')
-      .then((response) => {
-        order.filledStopOrder.bnbPrice = response.data.price;
-      })
-      .catch((error) => client.logger.error(error));
-
-    // Calculate cumulative commission in bnb
-    const cumulativeBnbCommission = await order.filledStopOrder.fills.reduce(
-      (acc, fill) => acc + parseFloat(fill.commission),
-      0,
-    );
-    order.filledStopOrder.cumulativeBnbCommission = cumulativeBnbCommission;
+    // await client
+    //   .marginPairIndex('BNBUSDT')
+    //   .then((response) => {
+    //     order.stopOrder.bnbPrice = response.data.price;
+    //   })
+    //   .catch((error) => client.logger.error(error));
 
     // Calculate commission in usdt
-    order.filledStopOrder.cumulativeUsdtCommission =
-      parseFloat(order.filledStopOrder.bnbPrice) *
-      parseFloat(order.filledStopOrder.cumulativeBnbCommission);
-
-    // Calculate executed qty in usdt
-    const executedQtyUsdt = await order.filledStopOrder.fills.reduce(
-      (acc, fill) => acc + parseFloat(fill.price) * parseFloat(fill.qty),
-      0,
-    );
-    order.filledStopOrder.executedQtyUsdt = executedQtyUsdt;
+    order.stopOrder.cumulativeUsdtCommission =
+      parseFloat(order.stopOrder.cumulativeQuoteQty) * 0.0075;
 
     // Calculate loss
     order.profitAndLoss =
       order.side === 'BUY'
-        ? parseFloat(order.cumulativeQuoteQty) -
-          parseFloat(order.filledStopOrder.cumulativeQuoteQty) -
+        ? parseFloat(order.executedQtyUsdt) -
+          parseFloat(order.stopOrder.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
-          parseFloat(order.filledStopOrder.cumulativeUsdtCommission)
-        : parseFloat(order.filledStopOrder.cumulativeQuoteQty) -
-          parseFloat(order.cumulativeQuoteQty) -
+          parseFloat(order.stopOrder.cumulativeUsdtCommission)
+        : parseFloat(order.stopOrder.executedQtyUsdt) -
+          parseFloat(order.cexecutedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
-          parseFloat(order.filledStopOrder.cumulativeUsdtCommission);
+          parseFloat(order.stopOrder.cumulativeUsdtCommission);
+
+    console.log({ order, messages, errors });
 
     // Add message
     const message = {
@@ -389,5 +411,5 @@ exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
     { new: true },
   );
 
-  res.json({ order: updatedOrder, messages });
+  res.json({ order: updatedOrder, messages, errors });
 });

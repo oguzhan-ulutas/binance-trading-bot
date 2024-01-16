@@ -57,7 +57,7 @@ const Errors = () => {
             {errors.map((item) => {
               return (
                 <Fragment key={item.id}>
-                  <Item>
+                  <Item key={item.id}>
                     <Typography variant="caption" gutterBottom>
                       Code : {item.code} <br />
                       Message : {item.msg} <br />

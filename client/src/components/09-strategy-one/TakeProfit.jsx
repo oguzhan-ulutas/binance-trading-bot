@@ -25,6 +25,8 @@ const TakeProfit = () => {
     setIsBotStarted,
     errors,
     setErrors,
+    messages,
+    setMessages,
   } = useContext(StrategyOneContext);
 
   const updateToTakeProfit = () => {
@@ -94,6 +96,7 @@ const TakeProfit = () => {
           setOrder(res.order);
           setTakeProfit(false);
           // Placing new order after taking profit
+          setMessages([...messages, ...res.messages]);
           placeOrder(asset, side, orderQuantity);
         })
         .catch((err) => {

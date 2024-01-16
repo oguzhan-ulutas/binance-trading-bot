@@ -16,10 +16,13 @@ const IsStopOrderFilled = () => {
     isStopped,
     setIsStopped,
     setIsBotStarted,
+    messages,
+    setMessages,
   } = useContext(StrategyOneContext);
 
   const fetchStopOrder = () => {
-    const url = `${serverUrl}/margin/is-stop-order-filled`;
+    const url = `${serverUrl}/margin/strategy-one/is-stop-order-filled`;
+
     fetch(url, {
       method: "POST",
       mode: "cors",
@@ -29,7 +32,6 @@ const IsStopOrderFilled = () => {
       body: JSON.stringify({
         pair: order.symbol,
         orderId: order.orderId,
-        origClientOrderId: order.stopOrder.clientOrderId,
       }),
     })
       .then((res) => {
@@ -39,8 +41,10 @@ const IsStopOrderFilled = () => {
         return res.json();
       })
       .then((res) => {
+        console.log(res);
         if (res.stopOrder.status === "FILLED") {
-          setOrder(res);
+          setOrder(res.order);
+          setMessages([...messages, ...res.messages]);
           setIsStopped(true);
           setIsBotStarted(false);
         }
@@ -77,7 +81,7 @@ const IsStopOrderFilled = () => {
           {isStopped ? "Order stopped!!!" : "Not stopped yet!!!"}
         </Typography>
       ) : null}
-      {/* <Button onClick={fetchStopOrder}>Stop Order Fetch</Button> */}
+      <Button onClick={fetchStopOrder}>Stop Order Fetch</Button>
     </Box>
   );
 };

@@ -225,7 +225,6 @@ const BotActionInfo = () => {
   useEffect(() => {
     // Push order to orderArray, if it already exist update it
     if (order.orderId) {
-      console.log("inside order.OrderId");
       if (!orderArray.length) {
         const newItem = { orderCount, order };
         setOrderCount(orderCount + 1);

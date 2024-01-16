@@ -25,6 +25,7 @@ const GetAssetValue = () => {
     setErrors,
     messages,
     setMessages,
+    isBotStarted,
   } = useContext(StrategyOneContext);
 
   // Get asset value each second
@@ -46,9 +47,10 @@ const GetAssetValue = () => {
 
       await setAssetValue(parseFloat(result.price).toFixed(3));
 
-      if (!messages.length && isFetching) {
-        setMessages([...messages, ...result.messages]);
-      }
+      // if (!messages.length) {
+      //   setMessages([...messages, ...result.messages]);
+      //   console.log("Fetchassetvalue", messages);
+      // }
 
       if (result.errors.length) {
         await setErrors([...errors, ...result.errors]);
@@ -76,13 +78,13 @@ const GetAssetValue = () => {
 
   // Set messages for fetching
   useEffect(() => {
-    isFetching && messages.length
+    isFetching
       ? setMessages([
           ...messages,
           {
             msgId: uuidv4(),
             msg: "Fetch asset value started.",
-            functionName: "GetAssetValue",
+            functionName: "GetAssetValue - Set messages for fetching.",
           },
         ])
       : messages.length
@@ -91,7 +93,7 @@ const GetAssetValue = () => {
           {
             msgId: uuidv4(),
             msg: "Fetch asset value stopped.",
-            functionName: "GetAssetValue",
+            functionName: "GetAssetValue - Set messages for fetching.",
           },
         ])
       : null;

@@ -143,7 +143,8 @@ const StrategyOne = () => {
       })
       .then((res) => {
         setOrder(res.order);
-        setMessages([...messages, res.messages]);
+        setMessages([...messages, ...res.messages]);
+        console.log(res);
 
         if (res.errors.length) {
           setErrors([...errors, ...res.errors]);

@@ -44,6 +44,6 @@ router.post('/margin/strategy-one/place-order', strategyOneController.placeOrder
 router.post('/margin/strategy-one/take-profit', strategyOneController.takeProfit);
 
 // Fetch Stop order
-router.post('/margin/is-stop-order-filled', strategyOneController.isStopOrderFilled);
+router.post('/margin/strategy-one/is-stop-order-filled', strategyOneController.isStopOrderFilled);
 
 module.exports = router;
