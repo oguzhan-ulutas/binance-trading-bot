@@ -107,6 +107,10 @@ const TakeProfit = () => {
 
   return (
     <Box style={{ margin: "40px 0" }}>
+      <Typography variant="h3" gutterBottom>
+        To Take Profit : {toTakeProfit}
+      </Typography>
+
       <Button
         variant="contained"
         color="error"
@@ -119,22 +123,14 @@ const TakeProfit = () => {
       >
         Emergency Stop Bot Button
       </Button>
-      <Typography variant="h3" gutterBottom>
-        To Take Profit : {toTakeProfit}
-        <br />
-        Take Profit : {takeProfit}
-      </Typography>
-      <IsStopOrderFilled />
 
-      <Button
+      {/* <Button
         onClick={(asset, side, orderQuantity) => {
           placeOrder(asset, side, orderQuantity);
         }}
       >
         Set toTakeProfit
-      </Button>
-
-      <BotInfoTable />
+      </Button> */}
     </Box>
   );
 };

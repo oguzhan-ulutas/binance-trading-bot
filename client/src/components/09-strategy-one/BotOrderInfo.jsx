@@ -29,8 +29,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const BotActionInfo = () => {
-  const { order, assetArray } = useContext(StrategyOneContext);
-  const [orderArray, setOrderArray] = useState([]);
+  const { order, assetArray, orderArray, setOrderArray } =
+    useContext(StrategyOneContext);
 
   // const [orderArray, setOrderArray] = useState([
   //   {

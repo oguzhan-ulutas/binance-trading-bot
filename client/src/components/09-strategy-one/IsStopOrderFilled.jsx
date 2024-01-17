@@ -81,7 +81,7 @@ const IsStopOrderFilled = () => {
           {isStopped ? "Order stopped!!!" : "Not stopped yet!!!"}
         </Typography>
       ) : null}
-      <Button onClick={fetchStopOrder}>Stop Order Fetch</Button>
+      {/* <Button onClick={fetchStopOrder}>Stop Order Fetch</Button> */}
     </Box>
   );
 };

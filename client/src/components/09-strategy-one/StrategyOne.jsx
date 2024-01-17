@@ -23,6 +23,9 @@ import "./StrategyOne.css";
 import TakeProfit from "./TakeProfit";
 import Errors from "./Errors";
 import BotMessages from "./BotMessages";
+import BotInfoTable from "./BotInfoTable";
+import IsStopOrderFilled from "./IsStopOrderFilled";
+import TotalProfitAndLoss from "./TotalProfitAndLoss";
 
 const StrategyOne = () => {
   const serverUrl = import.meta.env.VITE_serverUrl;
@@ -120,6 +123,8 @@ const StrategyOne = () => {
   const [isStopped, setIsStopped] = useState(false);
   const [errors, setErrors] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [orderArray, setOrderArray] = useState([]);
+  const [profitAndLoss, setProfitAndLoss] = useState(0);
 
   const placeOrder = (pair, side, quantity) => {
     console.log("Send place order req");
@@ -188,12 +193,28 @@ const StrategyOne = () => {
         setErrors,
         messages,
         setMessages,
+        orderArray,
+        setOrderArray,
+        profitAndLoss,
+        setProfitAndLoss,
       }}
     >
       <Errors />
       <Divider style={{ margin: "20px 0" }} />
 
       <GetAssetValue />
+
+      <Divider style={{ margin: "20px 0" }} />
+
+      <TakeProfit />
+
+      <Divider style={{ margin: "20px 0" }} />
+
+      <IsStopOrderFilled />
+
+      <Divider style={{ margin: "20px 0" }} />
+
+      <TotalProfitAndLoss />
 
       <Divider style={{ margin: "20px 0" }} />
 
@@ -205,7 +226,9 @@ const StrategyOne = () => {
         <BotMessages />
       </div>
 
-      <TakeProfit />
+      <Divider style={{ margin: "20px 0" }} />
+
+      <BotInfoTable />
 
       <Divider style={{ margin: "20px 0" }} />
     </StrategyOneContext.Provider>
