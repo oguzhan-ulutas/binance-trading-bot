@@ -54,8 +54,9 @@ const BotMessages = () => {
                 <Item>
                   <Typography variant="caption" gutterBottom>
                     <strong>Action Number: {index + 1}</strong> <br />
-                    Action : {message.msg} <br />
-                    Function Name : {message.functionName} <br />
+                    <strong> Action :</strong> {message.msg} <br />
+                    <strong> Function Name :</strong> {message.functionName}{" "}
+                    <br />
                   </Typography>
                 </Item>
               </Fragment>

@@ -278,16 +278,22 @@ const BotActionInfo = () => {
                     variant="caption"
                     gutterBottom
                   >
-                    <strong>Order Number: {item.orderCount}</strong> <br />
-                    Pair : {item.order.symbol} <br />
-                    Order Status : {item.order.status} <br />
-                    Stop Order Status : {item.order.stopOrder.status} <br />
-                    Size : {item.order.executedQty} <br />
-                    Size Usdt : ${item.order.executedQtyUsdt} <br />
-                    Entry Price : {item.order.entryPrice} <br />
-                    Stop Price : {item.order.stopOrderPrice} <br />
-                    Take Profit Price : {item.order.takeProfitPrice} <br />
-                    Profit and Loss : {item.order.profitAndLoss} <br />
+                    <strong> Order Number: {item.orderCount}</strong> <br />
+                    <strong> Pair : </strong> {item.order.symbol} <br />
+                    <strong> Order Status : </strong> {item.order.status} <br />
+                    <strong> Stop Order Status : </strong>{" "}
+                    {item.order.stopOrder.status} <br />
+                    <strong> Size : </strong> {item.order.executedQty} <br />
+                    <strong> Size Usdt : </strong> ${item.order.executedQtyUsdt}{" "}
+                    <br />
+                    <strong> Entry Price : </strong> {item.order.entryPrice}{" "}
+                    <br />
+                    <strong> Stop Price : </strong> {item.order.stopOrderPrice}{" "}
+                    <br />
+                    <strong> Take Profit Price :</strong>{" "}
+                    {item.order.takeProfitPrice} <br />
+                    <strong> Profit and Loss :</strong>{" "}
+                    {item.order.profitAndLoss} <br />
                   </Typography>
                 </Item>
               </Fragment>
