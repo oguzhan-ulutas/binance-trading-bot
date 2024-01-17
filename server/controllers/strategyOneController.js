@@ -123,12 +123,12 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   // Calculate stop and take profit price
   const stopOrderPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.002).toFixed(3)
-      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.002).toFixed(3);
+      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3)
+      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3);
   const takeProfitPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.002).toFixed(3)
-      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.002).toFixed(3);
+      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3)
+      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3);
 
   order.stopOrderPrice = stopOrderPrice;
   order.takeProfitPrice = takeProfitPrice;
@@ -140,8 +140,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   const stopOrderSide = req.body.side === 'BUY' ? 'SELL' : 'BUY';
   const price =
     stopOrderSide === 'SELL'
-      ? parseFloat(order.stopOrderPrice).toFixed(2) * 0.9
-      : parseFloat(order.stopOrderPrice).toFixed(2) * 1.1;
+      ? parseFloat(order.stopOrderPrice).toFixed(3) * 0.9
+      : parseFloat(order.stopOrderPrice).toFixed(3) * 1.1;
 
   await client
     .newMarginOrder(
@@ -151,8 +151,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       {
         quantity: parseFloat(order.executedQty),
         newOrderRespType: 'FULL',
-        stopPrice: parseFloat(order.stopOrderPrice).toFixed(2),
-        price: parseFloat(price).toFixed(2),
+        stopPrice: parseFloat(order.stopOrderPrice).toFixed(3),
+        price: parseFloat(price).toFixed(3),
         timeInForce: 'GTC',
       },
     )
@@ -306,12 +306,12 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     // Calculate profit
     order.profitAndLoss =
       order.side === 'BUY'
-        ? parseFloat(order.executedQtyUsdt) -
-          parseFloat(order.takeProfitOrder.executedQty) -
+        ? parseFloat(order.takeProfitOrder.executedQtyUsdt) -
+          parseFloat(order.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.takeProfitOrder.cumulativeUsdtCommission)
-        : parseFloat(order.takeProfitOrder.executedQtyUsdt) -
-          parseFloat(order.executedQtyUsdt) -
+        : parseFloat(order.executedQtyUsdt) -
+          parseFloat(order.takeProfitOrder.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.takeProfitOrder.cumulativeUsdtCommission);
   }
@@ -384,12 +384,12 @@ exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
     // Calculate loss
     order.profitAndLoss =
       order.side === 'BUY'
-        ? parseFloat(order.executedQtyUsdt) -
-          parseFloat(order.stopOrder.executedQtyUsdt) -
+        ? parseFloat(order.stopOrder.executedQtyUsdt) -
+          parseFloat(order.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.stopOrder.cumulativeUsdtCommission)
-        : parseFloat(order.stopOrder.executedQtyUsdt) -
-          parseFloat(order.cexecutedQtyUsdt) -
+        : parseFloat(order.executedQtyUsdt) -
+          parseFloat(order.stopOrder.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.stopOrder.cumulativeUsdtCommission);
 

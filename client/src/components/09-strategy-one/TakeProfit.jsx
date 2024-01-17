@@ -71,6 +71,7 @@ const TakeProfit = () => {
   useEffect(() => {
     console.log(takeProfit);
     if (takeProfit === true) {
+      setTakeProfit(false);
       const url = `${serverUrl}/margin/strategy-one/take-profit`;
       fetch(url, {
         method: "POST",
@@ -94,9 +95,8 @@ const TakeProfit = () => {
         })
         .then((res) => {
           setOrder(res.order);
-          setTakeProfit(false);
-          // Placing new order after taking profit
           setMessages([...messages, ...res.messages]);
+          // Placing new order after taking profit
           placeOrder(asset, side, orderQuantity);
         })
         .catch((err) => {

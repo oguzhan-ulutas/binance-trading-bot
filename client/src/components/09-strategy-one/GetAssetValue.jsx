@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { Divider } from "@mui/material";
 
 import { useContext, useEffect } from "react";
 
@@ -26,6 +27,7 @@ const GetAssetValue = () => {
     messages,
     setMessages,
     isBotStarted,
+    order,
   } = useContext(StrategyOneContext);
 
   // Get asset value each second
@@ -47,11 +49,6 @@ const GetAssetValue = () => {
 
       await setAssetValue(parseFloat(result.price).toFixed(3));
 
-      // if (!messages.length) {
-      //   setMessages([...messages, ...result.messages]);
-      //   console.log("Fetchassetvalue", messages);
-      // }
-
       if (result.errors.length) {
         await setErrors([...errors, ...result.errors]);
       }
@@ -65,7 +62,7 @@ const GetAssetValue = () => {
       // Start fetching data if isFetching is true
       const intervalId = setInterval(() => {
         fetchAssetValue();
-      }, 1000);
+      }, 3000);
 
       // Clean up the interval on component unmount
       return () => clearInterval(intervalId);
@@ -87,7 +84,7 @@ const GetAssetValue = () => {
             functionName: "GetAssetValue - Set messages for fetching.",
           },
         ])
-      : messages.length
+      : messages.length && !isFetching
       ? setMessages([
           ...messages,
           {
@@ -121,8 +118,20 @@ const GetAssetValue = () => {
         >
           {isFetching ? "Stop Fetching Price" : "Start Fetching Price"}
         </Button>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ display: "flex" }}>
+          Stop Price: {order.orderId ? order.stopOrderPrice : 0}
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ margin: "0px 20px" }}
+          />
           Current Price: {assetValue}
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ margin: "0px 20px" }}
+          />
+          Take Profit Price :{order.orderId ? order.takeProfitPrice : 0}
         </Typography>
       </Box>
     </Box>
