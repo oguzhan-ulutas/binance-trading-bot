@@ -22,6 +22,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import StraightIcon from "@mui/icons-material/Straight";
+import ScubaDivingIcon from "@mui/icons-material/ScubaDiving";
 
 import Balance from "../02-margin/Balance";
 import logo from "../../assets/logo.jpg";
@@ -301,6 +302,36 @@ export default function Body({ fetchUserData }) {
                   }}
                 >
                   <CastForEducationIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Projections"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        </List>
+
+        <Divider />
+        <List>
+          {/* RSI DIVERGENCE*/}
+          <Link to="/rsi-divergence">
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ScubaDivingIcon />
                 </ListItemIcon>
                 <ListItemText
                   primary={"Projections"}
