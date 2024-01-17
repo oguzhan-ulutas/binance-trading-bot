@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
+import Badge from "@mui/material/Badge";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -20,13 +21,24 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -7,
+    top: 22,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "4px 4px",
+  },
+}));
+
 const BotMessages = () => {
   const { messages } = useContext(StrategyOneContext);
   console.log(messages);
 
   return (
     <Box sx={{ width: "100%" }}>
-      <h2>Bot Actions</h2>
+      <StyledBadge badgeContent={messages.length} color="primary">
+        <h2>Bot Actions</h2>
+      </StyledBadge>
       <Stack
         spacing={2}
         divider={<Divider flexItem />}
