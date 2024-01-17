@@ -127,7 +127,13 @@ const StrategyOne = () => {
   const [profitAndLoss, setProfitAndLoss] = useState(0);
 
   const placeOrder = (pair, side, quantity) => {
-    console.log("Send place order req");
+    const message = {
+      msgId: uuidv4(),
+      msg: "Sending new order request to server.",
+      functionName: "StrategyOne - placeOrder.",
+    };
+    setMessages([...messages, message]);
+
     const url = `${serverUrl}/margin/strategy-one/place-order`;
     fetch(url, {
       method: "POST",
@@ -138,7 +144,6 @@ const StrategyOne = () => {
       body: JSON.stringify({ pair, side, quantity }),
     })
       .then((res) => {
-        console.log(res);
         if (res.status >= 400) {
           const response = res.json();
           setErrors([...errors, ...response.errors]);
@@ -147,6 +152,7 @@ const StrategyOne = () => {
         return res.json();
       })
       .then((res) => {
+        console.log("placeOrder -->", res);
         setOrder(res.order);
         setMessages([...messages, ...res.messages]);
         console.log(res);

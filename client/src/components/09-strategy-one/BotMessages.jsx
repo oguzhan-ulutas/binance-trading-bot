@@ -32,7 +32,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const BotMessages = () => {
   const { messages } = useContext(StrategyOneContext);
-  console.log(messages);
 
   return (
     <Box sx={{ width: "100%" }}>

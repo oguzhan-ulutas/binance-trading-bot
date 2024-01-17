@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const Margin = require('../models/margin');
 const Trade = require('../models/trade');
 const Order = require('../models/order');
-const BotOrder = require('../models/botOrder');
+const BotOrder = require('../models/bot-order');
 
 const { binanceApiKey } = process.env;
 const { binanceApiSecretKey } = process.env;
@@ -123,12 +123,12 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   // Calculate stop and take profit price
   const stopOrderPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3)
-      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3);
+      ? (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(2)
+      : (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(2);
   const takeProfitPrice =
     req.body.side === 'BUY'
-      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(3)
-      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(3);
+      ? (parseFloat(order.entryPrice) + parseFloat(order.entryPrice) * 0.005).toFixed(2)
+      : (parseFloat(order.entryPrice) - parseFloat(order.entryPrice) * 0.005).toFixed(2);
 
   order.stopOrderPrice = stopOrderPrice;
   order.takeProfitPrice = takeProfitPrice;
@@ -140,8 +140,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
   const stopOrderSide = req.body.side === 'BUY' ? 'SELL' : 'BUY';
   const price =
     stopOrderSide === 'SELL'
-      ? parseFloat(order.stopOrderPrice).toFixed(3) * 0.9
-      : parseFloat(order.stopOrderPrice).toFixed(3) * 1.1;
+      ? parseFloat(order.stopOrderPrice).toFixed(2) * 0.9
+      : parseFloat(order.stopOrderPrice).toFixed(2) * 1.1;
 
   await client
     .newMarginOrder(
@@ -151,8 +151,8 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
       {
         quantity: parseFloat(order.executedQty),
         newOrderRespType: 'FULL',
-        stopPrice: parseFloat(order.stopOrderPrice).toFixed(3),
-        price: parseFloat(price).toFixed(3),
+        stopPrice: parseFloat(order.stopOrderPrice).toFixed(2),
+        price: parseFloat(price).toFixed(2),
         timeInForce: 'GTC',
       },
     )
@@ -198,7 +198,7 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
     errors.push(errorObject);
 
     console.error('Error saving order:', error);
-    res.json({ order: orderInstance, errors });
+    res.json({ order: orderInstance, errors, messages });
   }
 
   res.json({ order: orderInstance, errors, messages });
@@ -237,7 +237,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
       errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
-      res.json({ order, errors });
+      res.json({ order, errors, messages });
     });
 
   // Open Take Profit order
@@ -273,7 +273,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
       errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
-      res.json({ order, errors });
+      res.json({ order, errors, messages });
     });
 
   if (order.takeProfitOrder.status === 'FILLED') {
@@ -331,7 +331,7 @@ exports.takeProfit = asyncHandler(async (req, res, next) => {
     };
     messages.push(message);
   }
-
+  console.log('TAKE PROFIT', { order: updatedOrder, messages, errors });
   res.json({ order: updatedOrder, errors, messages });
 });
 
@@ -365,18 +365,10 @@ exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
       errorObject.id = uuidv4();
       errors.push(errorObject);
       console.log(error);
-      res.json({ order, errors });
+      res.json({ order, errors, messages });
     });
 
   if (order.stopOrder.status === 'FILLED') {
-    // Get current BNB price and add it to order object
-    // await client
-    //   .marginPairIndex('BNBUSDT')
-    //   .then((response) => {
-    //     order.stopOrder.bnbPrice = response.data.price;
-    //   })
-    //   .catch((error) => client.logger.error(error));
-
     // Calculate commission in usdt
     order.stopOrder.cumulativeUsdtCommission =
       parseFloat(order.stopOrder.cumulativeQuoteQty) * 0.0075;
@@ -392,8 +384,6 @@ exports.isStopOrderFilled = asyncHandler(async (req, res, next) => {
           parseFloat(order.stopOrder.executedQtyUsdt) -
           parseFloat(order.cumulativeUsdtCommission) -
           parseFloat(order.stopOrder.cumulativeUsdtCommission);
-
-    console.log({ order, messages, errors });
 
     // Add message
     const message = {

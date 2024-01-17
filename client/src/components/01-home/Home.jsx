@@ -19,7 +19,6 @@ const Home = () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res.errors);
         setUserMarginData(res.userMarginData);
         setErrors([...errors, ...res.errors]);
       })

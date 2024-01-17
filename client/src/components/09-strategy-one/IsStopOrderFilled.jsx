@@ -41,7 +41,7 @@ const IsStopOrderFilled = () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        console.log("IsStopOrderFilled", res);
         if (res.stopOrder.status === "FILLED") {
           setOrder(res.order);
           setMessages([...messages, ...res.messages]);

@@ -62,7 +62,7 @@ const GetAssetValue = () => {
       // Start fetching data if isFetching is true
       const intervalId = setInterval(() => {
         fetchAssetValue();
-      }, 3000);
+      }, 2000);
 
       // Clean up the interval on component unmount
       return () => clearInterval(intervalId);

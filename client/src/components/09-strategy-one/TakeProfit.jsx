@@ -31,6 +31,8 @@ const TakeProfit = () => {
     setMessages,
   } = useContext(StrategyOneContext);
 
+  const [toStopLoss, setToStopLoss] = useState(0);
+
   const updateToTakeProfit = () => {
     if (order.side === "BUY") {
       setToTakeProfit(
@@ -46,6 +48,26 @@ const TakeProfit = () => {
         (
           parseFloat(assetArray[assetArray.length - 1]) -
           parseFloat(order.takeProfitPrice)
+        ).toFixed(3)
+      );
+    }
+  };
+
+  const updateToStopLoss = () => {
+    if (order.side === "SELL") {
+      setToStopLoss(
+        (
+          parseFloat(order.stopOrderPrice) -
+          parseFloat(assetArray[assetArray.length - 1])
+        ).toFixed(3)
+      );
+    }
+
+    if (order.side === "BUY") {
+      setToStopLoss(
+        (
+          parseFloat(assetArray[assetArray.length - 1]) -
+          parseFloat(order.stopOrderPrice)
         ).toFixed(3)
       );
     }
@@ -111,8 +133,17 @@ const TakeProfit = () => {
           return res.json();
         })
         .then((res) => {
+          console.log("TakeProfit - Cancel stop Order", res);
+          const messagesCopy = [...messages];
+          const updatedMessages = messagesCopy.map((order, index) => {
+            if (order.orderId === res.order.orderId) {
+              messagesCopy[index] = res.order;
+              return messagesCopy;
+            }
+          });
+
           setOrder(res.order);
-          setMessages([...messages, ...res.messages]);
+          setMessages(updatedMessages);
           // Placing new order after taking profit
           placeOrder(asset, side, orderQuantity);
         })
@@ -124,8 +155,9 @@ const TakeProfit = () => {
 
   return (
     <Box style={{ margin: "40px 0" }}>
-      <Typography variant="h3" gutterBottom>
-        To Take Profit : {toTakeProfit}
+      <Typography variant="h4" gutterBottom>
+        To Take Profit : {toTakeProfit} <br />
+        To Stop Loss : {toStopLoss}
       </Typography>
 
       <Button

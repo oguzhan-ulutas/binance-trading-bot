@@ -12,10 +12,10 @@ const TotalProfitAndLoss = () => {
 
   useEffect(() => {
     const sumProfitAndLoss = orderArray.reduce((acc, order) => {
-      return acc + order.profitAndLoss;
+      return acc + parseFloat(order.profitAndLoss);
     }, 0);
 
-    setProfitAndLoss(sumProfitAndLoss);
+    setProfitAndLoss(sumProfitAndLoss.toFixed(3));
   }, [orderArray]);
 
   useEffect(() => {
