@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 
 import { StrategyOneContext } from "./StrategyOneContext";
 
+import { v4 as uuidv4 } from "uuid";
+
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -56,9 +58,16 @@ const TakeProfit = () => {
   }, [assetArray]);
 
   // if toTakeProfit equal or smaller then zero set take profit to true
-  const updateTakeProfit = () => {
+  const updateTakeProfit = async () => {
     if (parseFloat(toTakeProfit) <= 0) {
-      setTakeProfit(true);
+      await setTakeProfit(true);
+
+      const message = {
+        msgId: uuidv4(),
+        msg: "Taking profit.",
+        functionName: "Take Profit - updateTakeProfit",
+      };
+      setMessages([...messages, message]);
     }
   };
 
@@ -69,9 +78,17 @@ const TakeProfit = () => {
   // if takeProfit true cancel open stop order
 
   useEffect(() => {
-    console.log(takeProfit);
     if (takeProfit === true) {
       setTakeProfit(false);
+
+      const message = {
+        msgId: uuidv4(),
+        msg: "Set takeProfit to false.",
+        functionName:
+          "Take Profit - If takeProfit true cancel open stop order.",
+      };
+      setMessages([...messages, message]);
+
       const url = `${serverUrl}/margin/strategy-one/take-profit`;
       fetch(url, {
         method: "POST",
