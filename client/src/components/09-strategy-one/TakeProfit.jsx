@@ -7,8 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import BotInfoTable from "./BotInfoTable";
-import IsStopOrderFilled from "./IsStopOrderFilled";
 
 const TakeProfit = () => {
   const {

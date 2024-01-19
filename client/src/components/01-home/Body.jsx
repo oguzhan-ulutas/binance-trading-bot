@@ -334,7 +334,7 @@ export default function Body({ fetchUserData }) {
                   <ScubaDivingIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Projections"}
+                  primary={"RSI Divergence"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
