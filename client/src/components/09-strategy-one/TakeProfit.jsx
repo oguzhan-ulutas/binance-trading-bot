@@ -74,6 +74,7 @@ const TakeProfit = () => {
   useEffect(() => {
     if (assetArray.length > 3) {
       updateToTakeProfit();
+      updateToStopLoss();
     }
   }, [assetArray]);
 

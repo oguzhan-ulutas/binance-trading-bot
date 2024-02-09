@@ -48,27 +48,39 @@ Inside the frontend folder execute:
 npm run dev
 ```
 
-## Documentation
+## Detailed Info
 
-### 09 Strategy One
+### Home Page
 
-#### StrategyOne Component
+- It fetchs user data and shows the info of account.
+- Shows a pie chart of assets.
+- You can refresh any time your assets and max barrowable amount. <br><br>
+  ![](./img/home.png)
 
-- Main component
+### Order Calculations
 
-#### GetAssetValue Component
+- You can use this page to calculate a manual order. It takes all the assets' value and calculates
+  5% risk as default. And than you can input your order risk, it will give you the maximum amount of
+  trade size. And it shows the profit and loss table. <br><br>
+  ![](./img/order-calculations.png)
 
-- When you press the start fetching, it gets asset value every second, and appends the value to the assetsArray.
+### Strategy One
 
-#### PlaceOrder Component
+- The strategy is buy or sell from a price, put a stop order with 0.5%. If order stopped the bot stops.
+  if the price reaches %0.5 profits, it take profits and places a new order. <br><br>
+  ![](./img/strategy-one.png)
 
-- First asset value fetching needed to be started.
-- After setting order side, order type, and order quantity then bot can be started.
-- When the start button is pressed, the bot opens a market order at the current price and places a stop loss order 0.5% below or above the opened price. It saves the order to database and send order info to client.
+### Orders
 
-#### TakeProfit Component
+- You can reach all of your order history, And detail of any order by clicking the id.<br><br>
+  ![](./img/order-info.png)
 
-- It checks the order status every second. And informs the user.
-- If price reaches to take profit point (which is 0.5% up or down to entery price)
-  - it cancels the stop loss limit order, and updates it on database.
-  - Place a market order and takes profit.
+### Balance History
+
+- You can see all your balance history as graphs, usdt and btc value. <br><br>
+  ![](./img/history.png)
+
+### Projections
+
+- You can make different kind of projections. <br><br>
+  ![](./img/projections.png)

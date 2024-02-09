@@ -90,23 +90,28 @@ const StrategyOne = () => {
 
   // Set orderArray
   useState(() => {
-    if (orderArray.length === 0) {
-      const newItem = { orderCount, order };
-      setOrderArray([newItem]);
-      setOrderCount(orderCount + 1);
-    } else {
-      const orderArrayCopy = [...orderArray];
-      orderArrayCopy.map((oldOrder, index, arr) => {
-        if (oldOrder.orderId === order.orderId) {
-          orderArrayCopy[index].order = order;
-          setOrderArray([...orderArrayCopy]);
-        } else {
-          const newItem = { orderCount, order };
-          setOrderArray([...orderArray, newItem]);
-          setOrderCount(orderCount + 1);
-        }
-      });
+    console.log({ functionName: "Set order array", isFetching, order });
+    if (isFetching) {
+      if (orderArray.length === 0) {
+        const newItem = { orderCount, order };
+        setOrderArray([newItem]);
+        setOrderCount(orderCount + 1);
+      } else {
+        const orderArrayCopy = [...orderArray];
+        orderArrayCopy.map((oldOrder, index, arr) => {
+          if (oldOrder.orderId === order.orderId) {
+            arr[index].order = order;
+          } else {
+            const newItem = { orderCount, order };
+            orderArray.push(newItem);
+            setOrderCount(orderCount + 1);
+          }
+        });
+        setOrderArray(orderArrayCopy);
+      }
     }
+
+    console.log("ORDER ARRAY -->", orderArray);
   }, [order]);
 
   return (
